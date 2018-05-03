@@ -1,3 +1,4 @@
+# -*-coding:utf-8-*-
 """django_blog URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -13,14 +14,14 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url,include
 from django.contrib import admin
 # 在同目录下的urls.py里需要from xx导入，其他不需要，只需要import views
-from mybbs import views
+from myblog import views
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
-    url(r'^$', views.index),
+    # url(r'^$', views.index),
     url(r'^cms/', include('page_api.cms.urls')),
     # url(r'^front/', include('page_api.front.urls')),
     # url(r'^common/', include('page_api.common.urls')),

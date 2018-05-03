@@ -1,0 +1,29 @@
+{% extends "front_base.html" %}
+
+{% block headblock %}
+	{{block.super}}
+{% endblock headblock %}
+
+{% block detailblock %}
+	{% for article in articles %}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<a href="{% url 'front_article_detail' article_id=article.uid %}">{{article.title}}</a>
+			</div>
+			<div class="panel-body">
+				<p>
+					{% if article.desc %}
+						{{article.desc}}
+					{% else %}
+						{{article.content_html|truncatechars_html:100|striptags}}
+					{% endif %}
+				</p>
+				<div class="article-info">
+					<span>阅读：{{article.read_count}}</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+					<span>评论：10</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+					<span>发表时间：{{article.release_time|date:"Y/m/d H:i"}}</span>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock detailblock %}

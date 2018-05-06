@@ -1,9 +1,4 @@
-/*
-* @Author: xiaotuo
-* @Date:   2016-11-04 21:14:43
-* @Last Modified by:   xiaotuo
-* @Last Modified time: 2016-11-04 21:40:42
-*/
+
 
 'use strict';
 function getCookie(name) {
@@ -28,21 +23,6 @@ function getCookie(name) {
 // 				//2.在header当中设置csrf_token的值
 // 				xhr.setRequestHeader('X-CSRFToken',csrftoken);
 // 			}
-
-// function A(args){
-// 	console.log(args);
-// }
-
-// function B(args){
-// 	args['username'] = 'xt';
-// 	A(args);
-// }
-
-// A({'username':'xt'});
-// A({'username':'xt'});
-// A({'username':'xt'});
-// A({'username':'xt'});
-// B();
 
 
 var xtajax = {

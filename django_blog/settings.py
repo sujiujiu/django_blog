@@ -142,4 +142,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
+# 设置默认的login重定向，即默认的login页面
 LOGIN_URL = '/cms/login/'

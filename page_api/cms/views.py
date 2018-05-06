@@ -11,6 +11,8 @@ from forms import CMSLoginForm
 def cms_index(request):
 	return render(request, 'cms_index.html')
 
+
+# 如果使用的是类定义的view，不能使用@login_required
 def cms_login(request):
 	if request.method == 'GET':
 		return render(request, 'cms_login.html')

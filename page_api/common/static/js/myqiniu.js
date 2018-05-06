@@ -1,16 +1,7 @@
-/*
-* @Author: xiaotuo
-* @Date:   2016-11-08 22:07:18
-* @Last Modified by:   xiaotuo
-* @Last Modified time: 2016-11-08 23:12:43
-*/
 
 'use strict';
-// var args = {'browser_button':'xxx','success':function() {},'error':function() {}}
-// xtqiniu.setUp(args)
 
-
-var xtqiniu = {
+var myqiniu = {
 	'setUp': function(args) {
 		var domain = 'http://7xqenu.com1.z0.glb.clouddn.com/';
 		var params = {

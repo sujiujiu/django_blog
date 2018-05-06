@@ -1,13 +1,7 @@
-/*
-* @Author: xiaotuo
-* @Date:   2016-11-15 19:08:07
-* @Last Modified by:   Administrator
-* @Last Modified time: 2016-11-15 19:12:22
-*/
 
 'use strict';
 
-var xttemplate = {
+var mytemplate = {
 	'template': function(id,data) {
 		// 先添加格式化时间的辅助函数
 		template.helper('dateFormat',this._dateFormat);

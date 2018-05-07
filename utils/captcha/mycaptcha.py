@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
-# @Author: xiaotuo
-# @Date:   2016-10-29 22:18:38
-# @Last Modified by:   Administrator
-# @Last Modified time: 2016-11-21 20:08:31
 import random
 import string
 import sys
 import math
-# pip install Pillow
-# Image:是一个画板(context),ImageDraw:是一个画笔, ImageFont:画笔的字体
 from PIL import Image,ImageDraw,ImageFont,ImageFilter
 from django.conf import settings
 from django.core.cache import cache

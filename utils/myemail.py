@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Author: xiaotuo
-# @Date:   2016-11-18 21:34:10
-# @Last Modified by:   Administrator
-# @Last Modified time: 2016-11-18 21:52:56
 import hashlib
 from django.core.cache import cache
 from django.shortcuts import reverse
@@ -23,7 +19,7 @@ def send_email(request,email,check_url,cache_data=None,subject=None,message=None
 		subject = u'邮箱验证'
 	# message中应该包含验证的链接
 	if not message:
-		message = u'博客验证链接,点击 ' + url + u'  ,请在10分钟内完成注册。工作人员不会向您索取验证码，请勿泄露。消息来自：小拓的博客'
+		message = u'博客验证链接,点击 ' + url + u'  ,请在10分钟内完成注册。'
 	from_mail = settings.EMAIL_HOST_USER
 	recipient_list = [email]
 	if mail.send_mail(subject,message,from_mail,recipient_list):

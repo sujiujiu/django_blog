@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for django_blog project.
 
@@ -146,27 +147,27 @@ STATIC_URL = '/static/'
 # 设置默认的login重定向，即默认的login页面
 LOGIN_URL = '/cms/login/'
 
-# email config
-EMAIL_HOST_PASSWORD = 'kswaqavhlfmldjdh'
-EMAIL_HOST_USER = '1835198009@qq.com'
-EMAIL_HOST = 'smtp.qq.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-
-USER_SESSION_ID = 'hhh'
-CMS_SESSION_ID = 'DJDJFD'
-FRONT_SESSION_ID = 'DJDJFD'
-
-# 阿里大于
-APP_KEY = '23718970'
-APP_SECRET = '8b17bd4ead13f913987ace17a515d8ac'
-SIGN_NAME = 'BBS论坛开发'
-TEMPLATE_CODE = 'SMS_57960252'
-
-# 七牛
-QINIU_ACCESS_KEY = 'L4Fqoih4DT_hyKz-0XGDk0MTnivKDII5RdDckdyY'
-QINIU_SECRET_KEY = 'xdcdMGALlLkhZfBVUKKwNCV7axT470eI6LLNJ5Iz'
-
 # 每页显示多少条数据
 PAGE_NUM = 10
+
+# # email config
+# EMAIL_HOST_PASSWORD = 'kswaqavhlfmldjdh'
+# EMAIL_HOST_USER = 'xxx@qq.com'
+# EMAIL_HOST = 'smtp.qq.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
+
+# USER_SESSION_ID = 'hhh'
+# CMS_SESSION_ID = 'DJDJFD'
+# FRONT_SESSION_ID = 'DJDJFD'
+
+# # 阿里大于
+# APP_KEY = 'xxx'
+# APP_SECRET = 'xxx'
+# SIGN_NAME = 'xxx'
+# TEMPLATE_CODE = 'SMS_xxxx'
+
+# # 七牛
+# QINIU_ACCESS_KEY = 'xxx'
+# QINIU_SECRET_KEY = 'xxxx'

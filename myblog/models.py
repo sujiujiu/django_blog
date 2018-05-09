@@ -9,16 +9,20 @@ from django.contrib.auth.models import User
 class ArticleModel(models.Model):
 	# 如果一个field传了editable=False，那么调用diaogo的model_to_dict的时候会丢失这个字段
 	uid = models.UUIDField(primary_key=True,default=uuid.uuid4)
-	author = models.ForeignKey(User,null=True)
 	title = models.CharField(max_length=100)
-	category = models.ForeignKey('CategoryModel')
 	desc = models.CharField(max_length=200)
 	thumbnail = models.URLField(blank=True)
-	tags = models.ManyToManyField('TagModel',blank=True)
-	content_html = models.TextField()
-	release_time = models.DateTimeField(auto_now_add=True,null=True)
+	content = models.TextField()
+	# auto_now_add只会在第一次存入当前时间，之后不会修改该值
+	create_time = models.DateTimeField(auto_now_add=True,null=True)
+	# auto_now每次修改都会更新当前时间
 	update_time = models.DateTimeField(auto_now=True,null=True)
 	read_count = models.IntegerField(default=0)
+	
+	tags = models.ManyToManyField('TagModel',blank=True)
+
+    author = models.ForeignKey(User,null=True)
+	category = models.ForeignKey('CategoryModel')
 	top = models.ForeignKey('TopModel',null=True,on_delete=models.SET_NULL)
 
 

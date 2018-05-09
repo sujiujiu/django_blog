@@ -1,9 +1,3 @@
-/*
-* @Author: xiaotuo
-* @Date:   2016-11-18 21:17:19
-* @Last Modified by:   Administrator
-* @Last Modified time: 2016-11-18 21:17:27
-*/
 
 'use strict';
 

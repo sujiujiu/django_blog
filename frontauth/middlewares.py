@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Author: xiaotuo
-# @Date:   2016-11-18 20:40:01
-# @Last Modified by:   Administrator
-# @Last Modified time: 2016-11-18 21:05:02
 from django.utils.deprecation import MiddlewareMixin
 from models import FrontUserModel
 import configs

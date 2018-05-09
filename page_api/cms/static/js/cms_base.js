@@ -1,9 +1,3 @@
-/*
-* @Author: xiaotuo
-* @Date:   2016-10-28 22:47:08
-* @Last Modified by:   xiaotuo
-* @Last Modified time: 2016-11-02 22:38:45
-*/
 
 'use strict';
 $(document).ready(function() {

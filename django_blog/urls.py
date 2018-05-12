@@ -5,10 +5,7 @@ from django.contrib import admin
 from myblog import views
 
 urlpatterns = [
-    # url(r'^admin/', admin.site.urls),
-    # url(r'^$', views.index),
+    url(r'', include('page_api.front.urls')),
     url(r'^cms/', include('page_api.cms.urls')),
-    # url(r'^front/', include('page_api.front.urls')),
-    # url(r'^common/', include('page_api.common.urls')),
-    
+    url(r'^common/', include('page_api.common.urls')), 
 ]

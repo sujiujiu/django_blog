@@ -11,3 +11,7 @@
 .dropdown:hover .dropdown-menu{
 	display: block;
 }
+
+h1{
+	text-align: center;
+}

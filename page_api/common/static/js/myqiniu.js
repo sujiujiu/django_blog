@@ -3,8 +3,9 @@
 
 var myqiniu = {
 	'setUp': function(args) {
-		var domain = 'http://7xqenu.com1.z0.glb.clouddn.com/';
+		var domain = 'http://ono11bq0h.bkt.clouddn.com/';
 		var params = {
+			// browse_button:args['browse_btn'],
 			runtimes: 'html5,flash,html4', //上传模式，依次退化
 			max_file_size: '500mb', //文件最大允许的尺寸
 			dragdrop: false, //是否开启拖拽上传
@@ -27,7 +28,22 @@ var myqiniu = {
 						var error = args['error'];
 						error(up,err,errTip);
 					}
-				}
+				},
+				// 'UploadProgress': function (up,file) {
+    //                 if(args['progress']){
+    //                     args['progress'](up,file);
+    //                 }
+    //             },
+    //             'FilesAdded': function (up,files) {
+    //                 if(args['fileadded']){
+    //                     args['fileadded'](up,files);
+    //                 }
+    //             },
+    //             'UploadComplete': function () {
+    //                 if(args['complete']){
+    //                     args['complete']();
+    //                 }
+    //             }
 			},
 		};
 

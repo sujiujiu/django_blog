@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'myblog',
     'page_api.cms',
     'page_api.front',
+    'page_api.common',
     'frontauth',
+    # 'cmsauth'
 ]
 
 MIDDLEWARE = [

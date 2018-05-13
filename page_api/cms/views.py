@@ -36,7 +36,7 @@ def cms_login(request):
 					# 设置为0，意思是浏览器一旦关闭,session就会过期
 					request.session.set_expiry(0)
 				# 用于退出后重定向
-				nexturl = request.GET.get('next')
+				nexturl = request.GET.get('next',None)
 				if nexturl:
 					return redirect(nexturl)
 				else:

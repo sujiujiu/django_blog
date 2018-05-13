@@ -1,0 +1,12 @@
+
+.content-box{
+	padding-top: 60px;
+}
+
+.container{
+	max-width: 900px;
+}
+
+.input-group .form-control{
+	z-index: 0;
+}

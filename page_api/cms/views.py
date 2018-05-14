@@ -3,14 +3,32 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
+from django.core.cache import cache
+from django.core import mail
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
-from forms import CMSLoginForm
+from django.views.decorators.http import require_http_methods
+from django.conf import settings
+from django.forms import model_to_dict
+from django.db.models import Count
+
+from qiniu import Auth,put_file
+import qiniu.config
+
+from forms import CMSLoginForm,,UpdateProfileForm,UpdateEmailForm,\
+				AddCategoryForm,AddTagForm,AddArticleForm,UpdateArticleForm,\
+				DeleteArticleForm,TopArticleForm,CategoryForm,EditCategoryForm
+
+from myblog.models import ArticleModel,CategoryModel,TagModel,TopModel
+from cmsauth.models import CmsUser
+from utils.myemail import send_email
+
+
+# CMS用户管理
 
 @login_required
 def cms_index(request):
 	return render(request, 'cms_index.html')
-
 
 # 如果使用的是类定义的view，不能使用@login_required
 def cms_login(request):
@@ -51,3 +69,108 @@ def cms_login(request):
 def cms_logout(request):
 	logout(request)
 	return redirect(reverse('cms_login'))
+
+# 修改邮箱
+def cms_reset_email(request):
+	pass
+
+# 邮箱验证
+def cms_validate_email(request):
+	pass
+
+def cms_profile(request):
+	pass
+
+def cms_update_profile(request):
+	pass
+
+def cms_settings(request):
+	pass
+
+def cms_update_settings(request):
+	pass
+
+def cms_reset_pwd(request):
+	pass
+
+def cms_qiniu_token(request):
+	pass
+
+
+# 文章管理
+
+
+# 文章操作
+
+# 文章列表
+def cms_article_list(request):
+	pass
+
+# 添加文章
+def cms_add_article(request):
+	pass
+
+# 编辑文章
+def cms_edit_article(request):
+	pass
+
+# 删除文章
+def cms_remove_article(request):
+	pass
+
+
+# 文章置顶
+def cms_top_article(request):
+	pass
+
+
+
+# 评论管理
+
+def cms_comment_list(request):
+	pass
+
+def cms_remove_comment(request):
+	pass
+
+
+
+# 板块管理
+
+def cms_board_list(request):
+	pass
+
+def cms_add_board(request):
+	pass
+
+def cms_edit_board(request):
+	pass
+
+def cms_remove_board(request):
+	pass
+
+
+
+# tag标签管理
+
+def cms_add_tag(request):
+	pass
+
+def cms_remove_tag(request):
+	pass
+
+
+
+# 分类操作
+
+def cms_category_list(request):
+	pass
+
+def cms_add_category(request):
+	pass
+
+def cms_edit_category(request):
+	pass
+
+def cms_remove_category(request):
+	pass

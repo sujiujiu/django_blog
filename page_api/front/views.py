@@ -10,6 +10,7 @@ from django.core.cache import cache
 
 from frontauth import configs
 from frontauth.decorators import front_login_required
+from frontauth.utils import login,logout
 from forms import FrontLoginForm,FrontRegistForm,ForgetpwdForm,ResetpwdForm,CommentForm
 from models import FrontUserModel
 from utils import myjson
@@ -29,7 +30,7 @@ def front_login(request):
 			password = form.cleaned_data.get('password')
 			remember = form.cleaned_data.get('remember')
 
-			user = FrontUserModel.objects.filter(email=email).first()
+			user = login(request,email,password)
 			if user and user.check_password(password):
 				request.session[configs.LOGINED_KEY] = str(user.uid)
 				if remember:
@@ -54,21 +55,20 @@ def front_regist(request):
 
 @front_login_required
 def front_logout(request):
-	try:
-		del request.session[configs.LOGINED_KEY]
-	except KeyError:
-		pass
+	logout(request)
+    return redirect(reverse('front_index'))
+
+
 
 
 # 短信验证码
-@bp.route('/sms_captcha/')
-def sms_captcha():
+def sms_captcha(request):
     telephone = request.GET.get('telephone')
     # 获取用户名，用于发送短信验证码显示用户名
     # username = flask.request.args.get('username')
     if not telephone:
         return myjson.json_params_error(message=u'必须指定手机号码！')
-    if xtcache.get(telephone):
+    if cache.get(telephone):
         return myjson.json_params_error(message=u'验证码已发送，请1分钟后重复发送！')
     # if not username:
     #     return myjson.json_params_error(message=u'必须输入用户名！')

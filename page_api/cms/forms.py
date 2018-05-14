@@ -5,11 +5,12 @@ from utils.captcha.mycaptcha import Captcha
 from utils import myjson
 from page_api.common.forms import BaseForm
 
+
 class CMSLoginForm(forms.Form):
 	username = forms.CharField(max_length=10, min_length=4)
 	password = forms.CharField(max_length=20, min_length=6)
 	captcha = forms.CharField(max_length=4,min_length=4)
-	remember = forms.BooleanField(required=False) #用户有可能不需要记住我,那么这个参数有可能就没有
+	remember = forms.BooleanField(required=False)
 
 	def clean_captcha(self):
 		captcha = self.cleaned_data.get('captcha',None)

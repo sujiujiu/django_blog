@@ -82,7 +82,7 @@ class Captcha(object):
         return (text,image)
 
     @classmethod
-    def check_captcha(cls,captcha):
+    def check_captcha(cls, captcha):
         captcha_cache = cache.get(captcha)
         if captcha_cache and captcha_cache == captcha:
             # 删除缓存

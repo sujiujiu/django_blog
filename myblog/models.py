@@ -19,13 +19,31 @@ class ArticleModel(models.Model):
     update_time = models.DateTimeField(auto_now=True,null=True)
     read_count = models.IntegerField(default=0)
     
-    tags = models.ManyToManyField('TagModel', blank=True)
     author = models.ForeignKey(User, null=True)
     category = models.ForeignKey('CategoryModel')
     top = models.ForeignKey('TopModel',null=True,on_delete=models.SET_NULL)
+    tags = models.ManyToManyField('TagModel', blank=True)
 
 
-class TopModel(models.Model):
+# # 帖子相关模型
+# class PostModel(models.Model):
+#     uid = models.UUIDField(primary_key=True,default=uuid.uuid4)
+#     title = models.CharField(max_length=100,null=False)
+#     content = models.TextField(null=False)
+#     create_time = models.DateTimeField(auto_now_add=True,null=True)
+#     update_time = models.DateTimeField(auto_now=True,null=True)
+#     read_count = models.IntegerField(default=0)
+#     is_removed = models.BooleanField(default=False)
+#     thumbnail = models.URLField(blank=True)
+
+#     tags = models.ManyToManyField('TagModel', blank=True)
+#     author = models.ForeignKey(User, null=True)
+#     category = models.ForeignKey('CategoryModel')
+#     board = models.ForeignKey('BoardModel')
+#     highlight = models.ForeignKey('HighlightPostModel',null=True,on_delete=models.SET_NULL)
+
+
+class HighlightPostModel(models.Model):
     # auto_now: save时就会更新
     # auto_now_add: 只有在第一次添加的时候才会修改这个字段
     create_time = models.DateTimeField(auto_now=True)
@@ -36,3 +54,26 @@ class CategoryModel(models.Model):
 class TagModel(models.Model):
     name = models.CharField(max_length=20, unique=True)
 
+# 版块模型
+class BoardModel(models.Model):
+    name = models.CharField(max_length=20, null=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, null=True)
+
+
+# 评论
+class CommentModel(models.Model):
+    content = models.TextField(null=False)
+    create_time = models.DateTimeField(auto_now=True)
+    is_removed = models.BooleanField(default=False)
+
+    author = models.ForeignKey(User, null=True)
+    post = models.ForeignKey('PostModel',null=False)
+    comment = models.ForeignKey('CommentModel',null=True)
+
+
+# 点赞
+class PostStarModel(models.Model):
+    create_time = models.DateTimeField(auto_now=True)
+    post = models.ForeignKey('PostModel',null=False)
+    author = models.ForeignKey(User, null=True)

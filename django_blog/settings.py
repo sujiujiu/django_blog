@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'page_api.front',
     'page_api.common',
     'frontauth',
-    # 'cmsauth'
+    'cmsauth'
 ]
 
 MIDDLEWARE = [
@@ -70,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cmsauth.context_processors.CmsContextProcessor'
                 'frontauth.context_processors.auth'
             ],
         },

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import top
 
-import settings
+from django.conf import settings
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.core.cache import cache
@@ -18,47 +18,69 @@ from utils import myjson
 
 
 def front_index(request):
-	return render(request, 'cms_index.html')
+    return render(request, 'front_index.html')
 
 def front_login(request):
-	if request.method == 'GET':
-		return render(request,'front_signin.html')
-	else:
-		form = FrontLoginForm(request.POST)
-		if form.is_valid():
-			email = form.cleaned_data.get('telephone')
-			password = form.cleaned_data.get('password')
-			remember = form.cleaned_data.get('remember')
+    if request.method == 'GET':
+        return render(request,'front_signin.html')
+    else:
+        form = FrontLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('telephone')
+            password = form.cleaned_data.get('password')
+            remember = form.cleaned_data.get('remember')
 
-			user = login(request,email,password)
-			if user and user.check_password(password):
-				request.session[configs.LOGINED_KEY] = str(user.uid)
-				if remember:
-					request.session.set_expiry(None)
-				else:
-					request.session.set_expiry(0)
-				# 跳转到
-				nexturl = request.GET.get('next')
-				if nexturl:
-					return redirect(nexturl)
-				else:
-					return redirect(reverse('front_index'))
-			else:
-				return render(request,'front_login.html',{"error":u'用户名和密码错误'})
-		else:
-			return render(request,'front_login.html',{'error':form.get_error()})
+            user = login(request,email,password)
+            if user and user.check_password(password):
+                request.session[configs.LOGINED_KEY] = str(user.uid)
+                if remember:
+                    request.session.set_expiry(None)
+                else:
+                    request.session.set_expiry(0)
+                # 跳转到
+                nexturl = request.GET.get('next')
+                if nexturl:
+                    return redirect(nexturl)
+                else:
+                    return redirect(reverse('front_index'))
+            else:
+                return render(request,'front_login.html',{"error":u'用户名和密码错误'})
+        else:
+            return render(request,'front_login.html',{'error':form.get_error()})
 
 
 def front_regist(request):
-	pass
+    pass
 
 
-@front_login_required
+# @front_login_required
 def front_logout(request):
-	logout(request)
+    logout(request)
     return redirect(reverse('front_index'))
 
 
+# 修改邮箱
+def front_reset_email(request):
+    pass
+
+# 邮箱验证
+def front_validate_email(request):
+    pass
+
+def front_profile(request):
+    pass
+
+def front_update_profile(request):
+    pass
+
+def front_settings(request):
+    pass
+
+def front_update_settings(request):
+    pass
+
+def front_reset_pwd(request):
+    pass
 
 
 # 短信验证码

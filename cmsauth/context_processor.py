@@ -6,6 +6,7 @@ from cmsauth.models import CmsUser
 # 把CmsUser的avatar属性添加到user当中
 # 在view.py中可以通过user.avatar的方式调用，
 # 类似在前台为了获得user的front.user一样，需要上下文处理器
+# 查询集做跨表查询时，QuerySet可以使用双下划线“__”
 def CmsContextProcessor(request):
 	user = request.user
 	if not hasattr(user,'avatar'):

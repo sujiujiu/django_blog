@@ -7,15 +7,17 @@ from django.conf import settings
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.core.cache import cache
+from django.views.decorators.http import require_http_methods
 
 from frontauth import configs
 from frontauth.decorators import front_login_required
 from frontauth.utils import login,logout
 from forms import FrontLoginForm,FrontRegistForm,ForgetpwdForm,ResetpwdForm,CommentForm
-from models import FrontUserModel
-from utils import myjson
+from frontauth.models import FrontUserModel
+from utils import myjson, myemail
+from utils.myemail import send_email
 
-
+# 个人设置
 
 def front_index(request):
     return render(request, 'front_index.html')
@@ -82,6 +84,11 @@ def front_update_settings(request):
 def front_reset_pwd(request):
     pass
 
+def front_forget_pwd(request):
+    pass
+
+def front_qiniu_token(request):
+    pass
 
 # 短信验证码
 def sms_captcha(request):
@@ -117,3 +124,44 @@ def sms_captcha(request):
     except Exception, e:
         print e
         return myjson.json_server_error()
+
+
+# 文章相关操作
+
+def front_article_list(request):
+    pass
+
+def front_article_detail(request):
+    pass
+
+# 添加文章
+def front_add_article(request):
+    pass
+
+# 编辑文章
+def front_edit_article(request):
+    pass
+
+# 删除文章
+def front_remove_article(request):
+    pass
+
+# 文章置顶
+def front_top_article(request):
+    pass
+
+# 文章点赞
+def front_article_star(request):
+    pass
+
+def front_comment_list(request):
+    pass
+
+def front_add_comment(request):
+    pass
+
+def front_remove_comment(request):
+    pass
+
+def front_reply_comment(request):
+    pass

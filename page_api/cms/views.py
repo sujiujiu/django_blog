@@ -15,11 +15,12 @@ from django.db.models import Count
 from qiniu import Auth,put_file
 import qiniu.config
 
-from forms import CMSLoginForm,,UpdateProfileForm,UpdateEmailForm,\
+from forms import CMSLoginForm,UpdateProfileForm,UpdateEmailForm,\
 				AddCategoryForm,AddTagForm,AddArticleForm,UpdateArticleForm,\
 				DeleteArticleForm,TopArticleForm,CategoryForm,EditCategoryForm
 
-from myblog.models import ArticleModel,CategoryModel,TagModel,TopModel
+from myblog.models import ArticleModel,CategoryModel,TagModel,TopModel,\
+				CommentModel,ArticleStarModel,BoardModel
 from cmsauth.models import CmsUser
 from utils.myemail import send_email
 

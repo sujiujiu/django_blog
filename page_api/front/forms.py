@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.core.validators import RegexValidator
 from django.core.cache import cache
+
+from page_api.common.forms import BaseForm
 from utils.captcha.mycaptcha import Captcha
 
 class CaptchaForm(forms.Form):

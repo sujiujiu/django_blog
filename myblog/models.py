@@ -43,7 +43,7 @@ class ArticleModel(models.Model):
 #     highlight = models.ForeignKey('HighlightPostModel',null=True,on_delete=models.SET_NULL)
 
 
-class HighlightPostModel(models.Model):
+class TopModel(models.Model):
     # auto_now: save时就会更新
     # auto_now_add: 只有在第一次添加的时候才会修改这个字段
     create_time = models.DateTimeField(auto_now=True)
@@ -68,12 +68,12 @@ class CommentModel(models.Model):
     is_removed = models.BooleanField(default=False)
 
     author = models.ForeignKey(User, null=True)
-    post = models.ForeignKey('PostModel',null=False)
+    post = models.ForeignKey('ArticleModel',null=False)
     comment = models.ForeignKey('CommentModel',null=True)
 
 
 # 点赞
-class PostStarModel(models.Model):
+class ArticleStarModel(models.Model):
     create_time = models.DateTimeField(auto_now=True)
-    post = models.ForeignKey('PostModel',null=False)
+    post = models.ForeignKey('ArticleModel',null=False)
     author = models.ForeignKey(User, null=True)

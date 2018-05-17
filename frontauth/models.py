@@ -8,13 +8,13 @@ import hashers
 
 class FrontUserModel(models.Model):
     uid = models.UUIDField(primary_key=True,default=uuid.uuid4)
-    telephone = models.CharField(max_length=11,unique=True)
+    telephone = models.CharField(max_length=11,unique=True,default='18888888888')
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=20)
     _password = models.CharField(max_length=128)
     avatar = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
-    joined_date = models.DateTimeField(auto_now_add=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     def __init__(self,*args,**kwargs):
         if 'password' in kwargs:

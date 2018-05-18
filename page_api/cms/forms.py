@@ -6,7 +6,7 @@ from utils import myjson
 from page_api.common.forms import BaseForm
 
 
-class CMSLoginForm(forms.Form):
+class CMSLoginForm(BaseForm):
 	username = forms.CharField(max_length=10, min_length=4)
 	password = forms.CharField(max_length=20, min_length=6)
 	captcha = forms.CharField(max_length=4,min_length=4)
@@ -18,13 +18,25 @@ class CMSLoginForm(forms.Form):
 			raise forms.ValidationError(u'验证码错误!')
 		return captcha
 
-class UpdateProfileForm(BaseForm):
+class SettingsForm(BaseForm):
 	avatar = forms.URLField(max_length=100,required=False)
 	username = forms.CharField(max_length=10,min_length=4,required=False)
 
 
-class UpdateEmailForm(BaseForm):
+class ResetEmailForm(BaseForm):
 	email = forms.EmailField(required=True)
+
+class ResetpwdForm(BaseForm):
+	oldpwd = forms.CharField(max_length=20, min_length=6)
+	newpwd = forms.CharField(max_length=20, min_length=6)
+	newpwd_repeat = forms.CharField(max_length=20,min_length=6)
+
+	def clean(self):
+		password = self.cleaned_data.get('password')
+		password_repeat = self.cleaned_data.get('password_repeat')
+		if password != password_repeat:
+			raise forms.ValidationError(u'两个密码不一致')
+		return self.cleaned_data
 
 
 class AddCategoryForm(BaseForm):

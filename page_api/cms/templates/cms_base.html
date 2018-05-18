@@ -1,11 +1,10 @@
-{% extends "cms_head.html" %}
+{% extends "common_head.html" %}
 {% load static %}
 
 {% block headblock %}
 <script src='{% static "js/cms_base.js" %}'></script>
 <link rel="stylesheet" href="{% static 'css/cms_base.css' %}">
-{% block baseheadblock %}
-{% endblock baseheadblock %}
+{% block baseheadblock %}{% endblock baseheadblock %}
 {% endblock headblock %}
 
 {% block bodyblock %}
@@ -23,17 +22,17 @@
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav menu-ul">
 				<li class="active"><a href="{% url 'cms_index' %}">博客管理</a></li>
-				{# <li><a href="{% url 'cms_addarticle' %}">写博客</a></li> #}
+				<li><a href="{% url 'cms_add_article' %}">写博客</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle='dropdown'>{{user.username}}<span class="caret"></span></a>
 					<ul class="dropdown-menu" role='menu'>
 						<li>
-							{# <a href="{% url 'cms_settings' %}">个人设置</a> #}
+							<a href="{% url 'cms_settings' %}">个人设置</a>
 						</li>
 						<li>
-							{# <a href="{% url 'cms_logout' %}">注销</a> #}
+							<a href="{% url 'cms_logout' %}">注销</a>
 						</li>
 					</ul>
 				</li>

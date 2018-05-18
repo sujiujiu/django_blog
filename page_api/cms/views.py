@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.core.cache import cache
 from django.core import mail
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -15,13 +16,13 @@ from django.db.models import Count
 from qiniu import Auth,put_file
 import qiniu.config
 
-from forms import CMSLoginForm,UpdateProfileForm,UpdateEmailForm,\
+from forms import CMSLoginForm,SettingsForm,ResetpwdEmailForm,ResetpwdForm,\
 				AddCategoryForm,AddTagForm,AddArticleForm,UpdateArticleForm,\
 				DeleteArticleForm,TopArticleForm,CategoryForm,EditCategoryForm
 
 from myblog.models import ArticleModel,CategoryModel,TagModel,TopModel,\
 				CommentModel,ArticleStarModel,BoardModel
-from cmsauth.models import CmsUser
+from cmsauth.models import CmsUserModel
 from utils.myemail import send_email
 
 
@@ -73,23 +74,44 @@ def cms_logout(request):
 
 # 修改邮箱
 def cms_reset_email(request):
-	pass
+	if request.method == 'GET':
+		return render(request, 'cms_reset_email.html')
+	else:
+		form = ResetEmailForm(request.POST)
+		if form.is_valid():
+			pass
+		else:
+			return render(request,'cms_reset_email.html',{'error':form.errors})
 
 # 邮箱验证
 def cms_validate_email(request):
 	pass
 
-def cms_profile(request):
-	pass
+# 修改密码
+def cms_reset_pwd(request):
+	if request.method == 'GET':
+		return render(request, 'cms_reset_pwd.html')
+	else:
+		form = ResetpwdForm(request.POST)
+		if form.is_valid():
+			pass
+		else:
+			return render(request,'cms_reset_pwd.html',{'error':form.errors})
 
-def cms_update_profile(request):
-	pass
+def cms_profile(request):
+	return render(request, 'cms_profile.html')
+
 
 def cms_settings(request):
-	pass
+	if request.method == 'GET':
+		return render(request, 'cms_settings.html')
+	else:
+		form = SettingsForm(request.POST)
+		if form.is_valid():
+			pass
+		else:
+			return render(request, 'cms_settings.html',{'error':form.errors})
 
-def cms_update_settings(request):
-	pass
 
 def cms_reset_pwd(request):
 	pass

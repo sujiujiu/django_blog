@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
-from cmsauth.models import CmsUser
+from models import CmsUserModel
 
 
 # 把CmsUser的avatar属性添加到user当中
@@ -10,7 +10,7 @@ from cmsauth.models import CmsUser
 def CmsContextProcessor(request):
 	user = request.user
 	if not hasattr(user,'avatar'):
-		cmsuser = CmsUser.objects.filter(user__pk=user.pk).first()
+		cmsuser = CmsUserModel.objects.filter(user__pk=user.pk).first()
 		if cmsuser:
 			setattr(user,'avatar',cmsuser.avatar)
 	return {'user':user}

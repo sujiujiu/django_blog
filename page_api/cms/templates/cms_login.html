@@ -1,12 +1,12 @@
-{% extends "cms_head.html" %}
+{% extends "common_head.html" %}
 {% load static %}
 {% block titleblock %}
 	CMS登录
 {% endblock titleblock %}
 
 {% block headblock %}
-	  {# <link rel="stylesheet" href="{% static 'css/cms_login.css' %}"> #}
-    {# // <script src='{% static "js/cms_login.js" %}'></script> #}
+	  <link rel="stylesheet" href="{% static 'css/cms_login.css' %}">
+    <script src='{% static "js/cms_login.js" %}'></script>
 {% endblock headblock %}
 
 {% block bodyblock %}
@@ -24,14 +24,14 @@
             </span>
           </div> 
         {% endcomment %}
-        {# <p class="text-danger error-p">{{error}}</p> #}
-        {% comment %}
+        <p class="text-danger error-p">{{error}}</p>
+        
           <div class="checkbox">
             <label>
             <input type="checkbox" value="remember-me" name='remember'> 记住我
             </label>
           </div> 
-        {% endcomment %}
+        
     		<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
   		</form>	
 	</div>

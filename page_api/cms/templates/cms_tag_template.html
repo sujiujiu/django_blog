@@ -1,4 +1,5 @@
 <script id="cms_tag_template" type="text/html">
+	// 不进行render渲染，即将verbatim标签里包裹的代码不进行渲染保持原样输出
 	{% verbatim %}
 		<label for="" class="checkbox-inline">
 			<input type="checkbox" value="{{id}}" checked> {{name}}

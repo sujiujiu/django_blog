@@ -1,6 +1,10 @@
 {% extends "cms_base.html" %}
 {% load static %}
 
+{% block titleblock %}
+	文章管理
+{% endblock titleblock %}
+
 {% block baseheadblock %}
 	<link rel="stylesheet" href="{% static 'css/cms_base_manage.css' %}">
 	<script src="{% static 'js/cms_base_manage.js' %}"></script>
@@ -16,7 +20,7 @@
 				<li role='presentation'><a href="#">评论管理</a></li>
 			</ul>
 		</div>
-		{% block detailblock %}
-		{% endblock detailblock %}
+		{% block main_content %}
+		{% endblock main_content %}
 	</div>
 {% endblock pageboxblock %}

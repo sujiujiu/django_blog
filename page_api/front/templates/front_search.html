@@ -4,7 +4,7 @@
 	{{block.super}}
 {% endblock headblock %}
 
-{% block detailblock %}
+{% block main_content %}
 	{% for article in articles %}
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -26,4 +26,4 @@
 			</div>
 		</div>
 	{% endfor %}
-{% endblock detailblock %}
+{% endblock main_content %}

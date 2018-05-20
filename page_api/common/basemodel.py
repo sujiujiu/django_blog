@@ -20,7 +20,8 @@ class PostModelHelper(object):
         COMMENT_COUNT = 4
 
     @classmethod
-    def post_list(cls, page, sort, board_id):
+    # def post_list(cls, page, sort, board_id):
+    def post_list(cls, page, sort):
         if sort == cls.PostSortType.CREATE_TIME:
             posts = ArticleModel.query.order_by(ArticleModel.create_time.desc())
         elif sort == cls.PostSortType.HIGHLIGH_TIME:
@@ -41,8 +42,8 @@ class PostModelHelper(object):
         posts = posts.filter(ArticleModel.is_removed == False)
 
         # 如果版块选项不为0，就根据版块id选择，如果为0就是全部，不需要筛选
-        if board_id:
-            posts = posts.filter(ArticleModel.board_id == board_id)
+        # if board_id:
+        #     posts = posts.filter(ArticleModel.board_id == board_id)
 
         total_post = posts.count()
         total_page = total_post / constants.PAGE_NUM
@@ -72,7 +73,7 @@ class PostModelHelper(object):
 
         context = {
             'posts': posts.slice(start, end),
-            'boards': BoardModel.query.all(),
+            # 'boards': BoardModel.query.all(),
             'pages': pages,
             'c_page': page,
             't_page': total_page,

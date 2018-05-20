@@ -24,7 +24,7 @@ def front_index(request):
 
 def front_login(request):
     if request.method == 'GET':
-        return render(request,'front_signin.html')
+        return render(request,'front_login.html')
     else:
         form = FrontLoginForm(request.POST)
         if form.is_valid():

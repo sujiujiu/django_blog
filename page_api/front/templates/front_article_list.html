@@ -10,7 +10,7 @@
 	{% include "front_articlelist_tpl.html" %}
 {% endblock headblock %}
 
-{% block detailblock %}
+{% block main_content %}
 	<div class="row">
 		<h1 class="page-header">
 			{% if c_category %}
@@ -61,4 +61,4 @@
 		</div>
 		<button class="btn btn-primary load-article-btn" data-current-page="{{c_page}}" data-category-id="{{c_category.id}}" data-loading-text="加载中...">加载更多</button>
 	</div>
-{% endblock detailblock %}
+{% endblock main_content %}

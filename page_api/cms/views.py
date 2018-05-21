@@ -113,9 +113,6 @@ def cms_settings(request):
 			return render(request, 'cms_settings.html',{'error':form.errors})
 
 
-def cms_reset_pwd(request):
-	pass
-
 def cms_qiniu_token(request):
 	pass
 

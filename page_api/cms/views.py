@@ -16,7 +16,7 @@ from django.db.models import Count
 from qiniu import Auth,put_file
 import qiniu.config
 
-from forms import CMSLoginForm,SettingsForm,ResetpwdEmailForm,ResetpwdForm,\
+from forms import CMSLoginForm,SettingsForm,ResetEmailForm,ResetpwdForm,\
 				AddCategoryForm,AddTagForm,AddArticleForm,UpdateArticleForm,\
 				DeleteArticleForm,TopArticleForm,CategoryForm,EditCategoryForm
 
@@ -24,6 +24,7 @@ from myblog.models import ArticleModel,CategoryModel,TagModel,TopModel,\
 				CommentModel,ArticleStarModel,BoardModel
 from cmsauth.models import CmsUserModel
 from utils.myemail import send_email
+from utils import myjson
 
 
 # CMS用户管理
@@ -132,11 +133,24 @@ def cms_add_article(request):
 
 # 编辑文章
 def cms_edit_article(request):
-	pass
+	if request.method == 'GET':
+		return render(request, 'cms_add_article.html')
+	else:
+		form = AddArticleForm(request.POST)
+		if form.is_valid():
+			pass
+		else:
+			return render(request, 'cms_add_article.html',{'error':form.errors})
 
 # 删除文章
 def cms_remove_article(request):
-	pass
+	article_id = request.POST.get(uid,'None')
+	if article_id:
+		article_model = ArticleModel.objects.filter(article_id)
+	    article_model.is_removed = True
+	    article_model.save()
+    else:
+    	pass
 
 
 # 文章置顶

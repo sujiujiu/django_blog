@@ -11,15 +11,17 @@ class ArticleModel(models.Model):
     uid = models.UUIDField(primary_key=True,default=uuid.uuid4)
     title = models.CharField(max_length=100)
     desc = models.CharField(max_length=200)
-    thumbnail = models.URLField(blank=True)
+    thumbnail = models.URLField(max_length=200)
     content = models.TextField()
     # auto_now_add只会在第一次存入当前时间，之后不会修改该值
     create_time = models.DateTimeField(auto_now_add=True,null=True)
     # auto_now每次修改都会更新当前时间
     update_time = models.DateTimeField(auto_now=True,null=True)
     read_count = models.IntegerField(default=0)
+    is_removed = models.BooleanField(required=False)
     
-    author = models.ForeignKey(User, null=True)
+    author = models.ForeignKey(User, null=False)
+    # board = models.ForeignKey('BoardModel', null=True)
     category = models.ForeignKey('CategoryModel')
     top = models.ForeignKey('TopModel',null=True,on_delete=models.SET_NULL)
     tags = models.ManyToManyField('TagModel', blank=True)

@@ -34,7 +34,7 @@ def front_login(request):
 
             user = login(request,email,password)
             if user and user.check_password(password):
-                request.session[configs.LOGINED_KEY] = str(user.uid)
+                # request.session[configs.LOGINED_KEY] = str(user.uid)
                 if remember:
                     request.session.set_expiry(None)
                 else:

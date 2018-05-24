@@ -55,6 +55,9 @@ class AddArticleForm(BaseForm):
 class UpdateArticleForm(AddArticleForm):
 	uid = forms.UUIDField()
 
+class DeleteArticleForm(BaseForm):
+	uid = forms.UUIDField(error_messages={'required':u'必须输入文章id'})
+
 
 class TopArticleForm(DeleteArticleForm):
 	pass

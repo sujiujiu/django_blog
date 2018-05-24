@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class ArticleModel(models.Model):
     # 如果一个field传了editable=False，那么调用diaogo的model_to_dict的时候会丢失这个字段
-    uid = models.UUIDField(primary_key=True,default=uuid.uuid4)
+    article_id = models.UUIDField(primary_key=True,default=uuid.uuid4)
     title = models.CharField(max_length=100)
     desc = models.CharField(max_length=200)
     thumbnail = models.URLField(max_length=200)

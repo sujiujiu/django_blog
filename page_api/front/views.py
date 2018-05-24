@@ -142,9 +142,13 @@ def front_add_article(request):
 def front_edit_article(request):
     pass
 
-# 删除文章
+# 删除文章，和后端不同，前台只删除，但不真正删除
 def front_remove_article(request):
-    pass
+    article_id = request.GET.get('article_id')
+    article_model = ArticleModel.objects.filter(article_id=article_id)
+    article_model.is_removed = True
+    article_model.save()
+    return redirect(reverse('article_list'))
 
 # 文章置顶
 def front_top_article(request):

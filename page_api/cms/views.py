@@ -142,15 +142,16 @@ def cms_edit_article(request):
 		else:
 			return render(request, 'cms_add_article.html',{'error':form.errors})
 
-# 删除文章
-def cms_remove_article(request):
-	article_id = request.POST.get(uid,'None')
-	if article_id:
-		article_model = ArticleModel.objects.filter(article_id)
-	    article_model.is_removed = True
-	    article_model.save()
-    else:
-    	pass
+# 删除文章，后台删除即真正从数据库中删除
+@login_required
+@require_http_methods(['POST'])
+def cms_delete_article(request):
+	form = DeleteArticleForm(request.POST)
+	if form.is_valid():
+		pass
+	else:
+		return redirect(reverse('article_list'))
+
 
 
 # 文章置顶

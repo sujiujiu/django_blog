@@ -53,10 +53,10 @@ class AddArticleForm(BaseForm):
 	content_html = forms.CharField()
 
 class UpdateArticleForm(AddArticleForm):
-	uid = forms.UUIDField()
+	article_id = forms.UUIDField()
 
 class DeleteArticleForm(BaseForm):
-	uid = forms.UUIDField(error_messages={'required':u'必须输入文章id'})
+	article_id = forms.UUIDField(error_messages={'required':u'必须输入文章id'})
 
 
 class TopArticleForm(DeleteArticleForm):

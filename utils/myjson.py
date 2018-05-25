@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.http import JsonResponse
-from collections import namedtuple
 
 
 class HttpCode(object):
@@ -17,8 +16,10 @@ class HttpCode(object):
     methoderror = 405
     servererror = 500
 
-# 请求正常的json返回函数
 def json_result(code=HttpCode.ok,message='',data={},kwargs={}):
+    """
+        请求正常的json返回函数
+    """
     json = {'code':code,'message':message,'data':data}
     if kwargs.keys():
         # 把json和kwargs合并成一个字典

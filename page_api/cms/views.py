@@ -148,8 +148,16 @@ def cms_edit_article(request):
 def cms_delete_article(request):
 	form = DeleteArticleForm(request.POST)
 	if form.is_valid():
-		pass
+		article_id = form.cleaned_data.get('article_id')
+		article_model = ArticleModel.objects.filter(pk=article_id).first()
+		if article_model:
+			article_model.delete()
+			return myjson.json_result()
+		else:
+			return myjson.json_params_error(message=u'该文章不存在或已被删除')
+
 	else:
+		# return myjson.json_params_error(message=form.errors)
 		return redirect(reverse('article_list'))
 
 

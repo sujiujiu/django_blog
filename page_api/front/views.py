@@ -70,16 +70,14 @@ def front_validate_email(request):
     pass
 
 def front_profile(request):
-    pass
-
-def front_update_profile(request):
-    pass
+    return render(request, 'front_profile.html')
 
 def front_settings(request):
-    pass
+    if request.method == 'GET':
+        return render(request, 'front_settings.html')
+    else:
+        pass
 
-def front_update_settings(request):
-    pass
 
 def front_reset_pwd(request):
     pass

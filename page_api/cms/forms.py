@@ -4,6 +4,8 @@ from django import forms
 from utils.captcha.mycaptcha import Captcha
 from utils import myjson
 from page_api.common.forms import BaseForm
+# from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 
 class CMSLoginForm(BaseForm):
@@ -31,12 +33,44 @@ class ResetpwdForm(BaseForm):
 	newpwd = forms.CharField(max_length=20, min_length=6)
 	newpwd_repeat = forms.CharField(max_length=20,min_length=6)
 
+	def __init__(self, user, *args, **kwargs):
+	# def __init__(self, username, *args, **kwargs):
+		# self.username = username
+		self.user = user
+		super(ResetpwdForm, self).__init__(*args, **kwargs)
+
 	def clean(self):
-		password = self.cleaned_data.get('password')
-		password_repeat = self.cleaned_data.get('password_repeat')
-		if password != password_repeat:
+		newpwd = self.cleaned_data.get('newpwd')
+		newpwd_repeat = self.cleaned_data.get('newpwd_repeat')
+		if newpwd != newpwd_repeat:
 			raise forms.ValidationError(u'两个密码不一致')
 		return self.cleaned_data
+
+    def save_password(self):
+		oldpwd = self.cleaned_data.get('oldpwd')
+		newpwd = self.cleaned_data.get('newpwd')
+		is_vaild = self.user.check_password(oldpwd)
+		if vaild:
+			self.user.set_password(newpwd)
+			self.user.save()
+		else:
+            raise forms.ValidationError("密码错误")
+         return valid
+
+	def cleaned_password(self):
+		oldpwd = self.cleaned_data.get('oldpwd')
+		newpwd = self.cleaned_data.get('newpwd')
+		user = authenticate(username=self.username,password=oldpwd)
+		if user:
+			is_vaild = user.check_password(oldpwd)
+			if is_vaild:
+				user.set_password(newpwd)
+				user.save()
+			else:
+				raise forms.ValidationError(u'密码错误')
+		else:
+			user = user.create(username=username,password=newpwd)
+		return user
 
 
 class AddCategoryForm(BaseForm):
@@ -52,7 +86,7 @@ class AddArticleForm(BaseForm):
 	thumbnail = forms.URLField(max_length=100,required=False)
 	content_html = forms.CharField()
 
-class UpdateArticleForm(AddArticleForm):
+class EditArticleForm(AddArticleForm):
 	article_id = forms.UUIDField()
 
 class DeleteArticleForm(BaseForm):

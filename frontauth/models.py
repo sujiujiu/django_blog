@@ -15,6 +15,7 @@ class FrontUserModel(models.Model):
     avatar = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(auto_now=True)
 
     def __init__(self,*args,**kwargs):
         if 'password' in kwargs:

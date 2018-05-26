@@ -69,15 +69,18 @@ def cms_login(request):
 			return render(request, 'cms_login.html', {'error':form.get_error()})
 			
 # 注销
+@login_required
 def cms_logout(request):
 	logout(request)
 	return redirect(reverse('cms_login'))
 
 # 修改邮箱
+@login_required
 def cms_reset_email(request):
 	if request.method == 'GET':
 		return render(request, 'cms_reset_email.html')
 	else:
+		# 如果旧密码在数据库存在，则允许修改新密码
 		form = ResetEmailForm(request.POST)
 		if form.is_valid():
 			pass
@@ -89,20 +92,37 @@ def cms_validate_email(request):
 	pass
 
 # 修改密码
+@login_required
 def cms_reset_pwd(request):
 	if request.method == 'GET':
 		return render(request, 'cms_reset_pwd.html')
 	else:
-		form = ResetpwdForm(request.POST)
-		if form.is_valid():
-			pass
+		username = request.user
+		# 使用cleaned_password方法
+		# form = ResetpwdForm(request.POST,username=username)
+		# return render(request,'cms_reset_pwd.html',{'error':form.errors})
+		# 使用save_password方法
+		form = ResetpwdForm(request.POST,user=username)
+		if form.is_vaild():
+			oldpwd = form.cleaned_data.get('oldpwd')
+			user = authenticate(username=username,password=oldpwd)
+			if user:
+				is_vaild = form.save_password()
+				if is_vaild:
+					return myjson.json_result()
+				else:
+					return myjson.json_params_error(message=u'密码验证错误！')
+			else:
+				user = user.create(username=username,password=newpwd)
+				return myjson.json_result()
 		else:
 			return render(request,'cms_reset_pwd.html',{'error':form.errors})
 
+@login_required
 def cms_profile(request):
 	return render(request, 'cms_profile.html')
 
-
+@login_required
 def cms_settings(request):
 	if request.method == 'GET':
 		return render(request, 'cms_settings.html')
@@ -118,20 +138,23 @@ def cms_qiniu_token(request):
 	pass
 
 
-# 文章管理
+### 文章管理
 
 
-# 文章操作
+## 文章操作
 
 # 文章列表
+@login_required
 def cms_article_list(request):
 	pass
 
 # 添加文章
+@login_required
 def cms_add_article(request):
 	pass
 
 # 编辑文章
+@login_required
 def cms_edit_article(request):
 	if request.method == 'GET':
 		return render(request, 'cms_add_article.html')
@@ -141,6 +164,7 @@ def cms_edit_article(request):
 			pass
 		else:
 			return render(request, 'cms_add_article.html',{'error':form.errors})
+
 
 # 删除文章，后台删除即真正从数据库中删除
 @login_required
@@ -155,7 +179,6 @@ def cms_delete_article(request):
 			return myjson.json_result()
 		else:
 			return myjson.json_params_error(message=u'该文章不存在或已被删除')
-
 	else:
 		# return myjson.json_params_error(message=form.errors)
 		return redirect(reverse('article_list'))
@@ -168,17 +191,18 @@ def cms_top_article(request):
 
 
 
-# 评论管理
+## 评论管理
 
 def cms_comment_list(request):
 	pass
 
+@login_required
 def cms_remove_comment(request):
 	pass
 
 
 
-# 板块管理
+## 板块管理
 
 def cms_board_list(request):
 	pass
@@ -194,7 +218,7 @@ def cms_remove_board(request):
 
 
 
-# tag标签管理
+## tag标签管理
 
 def cms_add_tag(request):
 	pass
@@ -204,7 +228,7 @@ def cms_remove_tag(request):
 
 
 
-# 分类操作
+## 分类操作
 
 def cms_category_list(request):
 	pass

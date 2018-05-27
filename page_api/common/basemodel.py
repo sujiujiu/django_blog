@@ -20,37 +20,46 @@ class ArticleModelHelper(object):
         STAR_COUNT = 3
         COMMENT_COUNT = 4
 
-        article_model = ArticleModel.objects.all()
 
     @classmethod
     # def post_list(cls, page, sort, board_id):
     def post_list(cls, page, sort):
+        articleModel = ArticleModel.objects
+        article_model = articleModel.all()
+
         if sort == cls.ArticleSortType.CREATE_TIME:
-            articles = article_model.order_by(ArticleModel.create_time.desc())
+            articles = article_model.order_by('-create_time')
         elif sort == cls.ArticleSortType.HIGHLIGH_TIME:
             articles = article_model.order_by(
-                TopArticleModel.create_time.desc(), ArticleModel.create_time.desc())
+                '-toparticle__create_time',
+                '-create_time')
         elif sort == cls.ArticleSortType.STAR_COUNT:
-            articles = article_model.query(ArticleModel).group_by(ArticleModel.id).order_by(
-                db.func.count(ArticleStarModel.id).desc(), ArticleModel.create_time.desc())
+            articles = articleModel.values('pk').annotate(
+                star_counts=Count('articlestar__pk')).order_by(
+                    '-star_counts','-create_time'
+                )
         # 使用count这种方法需要从db导入func方法
         elif sort == cls.ArticleSortType.COMMENT_COUNT:
-            articles = article_model.query(ArticleModel).group_by(ArticleModel.id).order_by(
-                db.func.count(CommentModel.id).desc(), ArticleModel.create_time.desc())
+            articles = articleModel.values('pk').annotate(
+                comment_counts=Count('comment__pk')).order_by(
+                    '-comment_counts','-create_time'
+                )
         else:
-            articles = ArticleModel.query.order_by(ArticleModel.create_time.desc())
-        start = (page - 1) * constants.PAGE_NUM
-        end = start + settings.PAGE_NUM
+            articles = article_model.order_by('-create_time')
+        
+        page_num = settings.PAGE_NUM
+        start = (page - 1) * page_num
+        end = start + page_num
 
-        articles = articles.filter(ArticleModel.is_removed == False)
+        articles = articles.filter(is_removed=False)
 
         # 如果版块选项不为0，就根据版块id选择，如果为0就是全部，不需要筛选
         # if board_id:
         #     articles = articles.filter(ArticleModel.board_id == board_id)
 
-        total_post = articles.count()
-        total_page = total_post / constants.PAGE_NUM
-        if total_post % constants.PAGE_NUM > 0:
+        total_articles = articles.count()
+        total_page = total_articles / page_num
+        if total_articles % page_num > 0:
             total_page += 1
 
         pages = []
@@ -75,12 +84,13 @@ class ArticleModelHelper(object):
         pages.sort()
 
         context = {
-            'articles': articles.slice(start, end),
+            'articles': articles[start:end],
             # 'boards': BoardModel.query.all(),
             'pages': pages,
             'c_page': page,
             't_page': total_page,
             'c_sort': sort,
-            'c_board': board_id,
+            # 'c_board': board_id,
+            'c_category': category_id
         }
         return context

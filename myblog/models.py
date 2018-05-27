@@ -18,7 +18,7 @@ class ArticleModel(models.Model):
     # auto_now每次修改都会更新当前时间
     update_time = models.DateTimeField(auto_now=True,null=True)
     read_count = models.IntegerField(default=0)
-    is_removed = models.BooleanField(required=False)
+    is_removed = models.BooleanField(null=False,default=False)
     
     author = models.ForeignKey(User, null=False)
     # board = models.ForeignKey('BoardModel', null=True)

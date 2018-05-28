@@ -116,7 +116,8 @@ def cms_reset_pwd(request):
 				user = user.create(username=username,password=newpwd)
 				return myjson.json_result()
 		else:
-			return render(request,'cms_reset_pwd.html',{'error':form.errors})
+			message = form.errors
+			return xtjson.json_params_error(message)
 
 @login_required
 def cms_profile(request):
@@ -124,14 +125,32 @@ def cms_profile(request):
 
 @login_required
 def cms_settings(request):
+	# 1.默认User表里是没有avatar，所以用到了CMSUser表
+	# 2.CMSUser表和User表建立了一对一
+	# 3.我们先查找CMSUser里的用户id
+	# 4.如果用户存在则存储avatar，否则新建该用户并储存
 	if request.method == 'GET':
 		return render(request, 'cms_settings.html')
 	else:
 		form = SettingsForm(request.POST)
 		if form.is_valid():
-			pass
+			username = form.cleaned_data.get('username',None)
+			avatar = form.cleaned_data.get('avatar',None)
+			# 存储username
+			user = User.objects.all().first()
+			user.username = username
+			user.save()
+			# 存储avatar
+			cms_user = CmsUserModel.objects.filter(user__pk=user.pk)
+			if cms_user:
+				cms_user.avatar = avatar
+			else:
+				CmsUserModel(user=user,avatar=avatar)
+			cms_user.save()
+			return myjson.json_result()
 		else:
-			return render(request, 'cms_settings.html',{'error':form.errors})
+			message = form.errors
+			return xtjson.json_params_error(message)
 
 
 def cms_qiniu_token(request):
@@ -207,12 +226,15 @@ def cms_remove_comment(request):
 def cms_board_list(request):
 	pass
 
+@login_required
 def cms_add_board(request):
 	pass
 
+@login_required
 def cms_edit_board(request):
 	pass
 
+@login_required
 def cms_remove_board(request):
 	pass
 
@@ -220,9 +242,11 @@ def cms_remove_board(request):
 
 ## tag标签管理
 
+@login_required
 def cms_add_tag(request):
 	pass
 
+@login_required
 def cms_remove_tag(request):
 	pass
 
@@ -233,11 +257,14 @@ def cms_remove_tag(request):
 def cms_category_list(request):
 	pass
 
+@login_required
 def cms_add_category(request):
 	pass
 
+@login_required
 def cms_edit_category(request):
 	pass
 
+@login_required
 def cms_remove_category(request):
 	pass

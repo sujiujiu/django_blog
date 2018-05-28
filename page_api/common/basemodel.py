@@ -11,7 +11,7 @@ class ArticleModelHelper(object):
     class ArticleSortType(object):
         '''
             sort_type：1 - 代表是按时间排序,
-            sort_type：2 - 代表是按加精排序,
+            sort_type：2 - 代表是按置顶排序,
             sort_type：3 - 代表是按点赞量排序,
             sort_type：4 - 代表是按评论量排序,
         '''

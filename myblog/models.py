@@ -27,40 +27,19 @@ class ArticleModel(models.Model):
     tags = models.ManyToManyField('TagModel', blank=True)
 
 
-# # 帖子相关模型
-# class PostModel(models.Model):
-#     uid = models.UUIDField(primary_key=True,default=uuid.uuid4)
-#     title = models.CharField(max_length=100,null=False)
-#     content = models.TextField(null=False)
-#     create_time = models.DateTimeField(auto_now_add=True,null=True)
-#     update_time = models.DateTimeField(auto_now=True,null=True)
-#     read_count = models.IntegerField(default=0)
-#     is_removed = models.BooleanField(default=False)
-#     thumbnail = models.URLField(blank=True)
-
-#     tags = models.ManyToManyField('TagModel', blank=True)
-#     author = models.ForeignKey(User, null=True)
-#     category = models.ForeignKey('CategoryModel')
-#     board = models.ForeignKey('BoardModel')
-#     highlight = models.ForeignKey('HighlightPostModel',null=True,on_delete=models.SET_NULL)
-
-
+# 置顶
 class TopModel(models.Model):
     # auto_now: save时就会更新
     # auto_now_add: 只有在第一次添加的时候才会修改这个字段
     create_time = models.DateTimeField(auto_now=True)
 
+# 分类
 class CategoryModel(models.Model):
     name = models.CharField(max_length=20, unique=True)
 
+# 标签
 class TagModel(models.Model):
     name = models.CharField(max_length=20, unique=True)
-
-# 版块模型
-class BoardModel(models.Model):
-    name = models.CharField(max_length=20, null=True)
-    create_time = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(User, null=True)
 
 
 # 评论

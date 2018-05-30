@@ -73,16 +73,16 @@ class ResetpwdForm(BaseForm):
 		return user
 
 
-class AddCategoryForm(BaseForm):
-	categoryname = forms.CharField(max_length=20)
+class TagForm(BaseForm):
+	tag_id = forms.IntegerField()
 
 class AddTagForm(BaseForm):
-	tagname = forms.CharField(max_length=20)
+	tag_name = forms.CharField(max_length=20)
 
 class AddArticleForm(BaseForm):
 	title = forms.CharField(max_length=200)
 	category = forms.IntegerField(required=True)
-	desc = forms.CharField(max_length=200,required=False)
+	# desc = forms.CharField(max_length=200,required=False)
 	thumbnail = forms.URLField(max_length=100,required=False)
 	content = forms.CharField()
 
@@ -99,7 +99,12 @@ class TopArticleForm(DeleteArticleForm):
 class CategoryForm(BaseForm):
 	category_id = forms.IntegerField()
 
+class AddCategoryForm(BaseForm):
+	categoryname = forms.CharField(max_length=20)
+
 class EditCategoryForm(CategoryForm):
 	name = forms.CharField()
 
 	
+class DeleteCommentForm(BaseForm):
+	comment_id = forms.UUIDField()

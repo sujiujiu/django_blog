@@ -24,7 +24,7 @@ from common.basemodels import ArticleModelHelper
 
 from utils.myemail import send_email
 from utils import myjson
-from qiniu import Auth,put_file
+import qiniu
 import qiniu.config
 
 
@@ -81,17 +81,37 @@ def cms_reset_email(request):
 	if request.method == 'GET':
 		return render(request, 'cms_reset_email.html')
 	else:
-		# 如果旧密码在数据库存在，则允许修改新密码
+		# 如果邮箱在数据库存在，则无需修改
+		# 否则才允许修改新密码
 		form = ResetEmailForm(request.POST)
 		if form.is_valid():
-			pass
+			email = form.cleaned_data.get('email', None)
+			if email:
+				if request.email == email:
+					return myjson.json_params_error(u'新邮箱与老邮箱一致，无需修改！')
+				else:
+					if send_mail(receivers=email):
+						return myjson.json_result(u'该邮箱已经发送验证码了！')
+				    else:
+				        return myjson.json_server_error()
+	        else:
+	        	message = form.get_error()
+	            return myjson.json_params_error(message)
 		else:
 			return render(request,'cms_reset_email.html',{'error':form.errors})
 
 # 邮箱验证
 @login_required
-def cms_validate_email(request):
-	pass
+def cms_validate_email(request, email):
+	# cache的保存期设置为2分钟，如果还能获取，则说明验证码已发送
+	# 否则链接失效
+	if cache.get(email):
+		user = request.user
+		user.email = email
+		user.save(update_fields=['email'])
+		return myjson.json_result(u'该邮箱验证成功！')
+	else:
+		return myjson.json_params_error(u'链接已失效！')
 
 # 修改密码
 @login_required
@@ -139,7 +159,8 @@ def cms_settings(request):
 			username = form.cleaned_data.get('username',None)
 			avatar = form.cleaned_data.get('avatar',None)
 			# 存储username
-			user = User.objects.all().first()
+			# user = User.objects.all().first()
+			user = request.user
 			user.username = username
 			user.save()
 			# 存储avatar
@@ -156,8 +177,15 @@ def cms_settings(request):
 
 
 @login_required
+@require_http_methods(['GET'])
 def cms_qiniu_token(request):
-	pass
+	# 授权
+    q = qiniu.Auth(settings.QINIU_ACCESS_KEY, settings.QINIU_SECRET_KEY)
+    # 选择七牛的云空间
+    bucket_name = 'myblog-article'
+    # 生成token
+    token = q.upload_token(bucket_name)
+    return myjson.json_result({'uptoken': token})
 
 
 ### 文章管理
@@ -278,7 +306,6 @@ def cms_edit_article(request, article_id):
 			return myjson.json_params_error(message)
 
 
-
 # 删除文章，后台删除即真正从数据库中删除
 @login_required
 @require_http_methods(['POST'])
@@ -297,23 +324,51 @@ def cms_delete_article(request):
 		return redirect(reverse('article_list'))
 
 
-
 # 文章置顶
 @login_required
 def cms_top_article(request):
-	pass
+	'''
+		1. 不管数据库中该文章是否已经置顶，都保存，这样可以更改文章修改时间
+		2. 如果没有置顶则置顶，有则直接保存
+		3. 修改TopModel，之后也要更改ArticleModel，只需要更改top字段
+	'''
+	form = TopArticleForm(request.POST)
+	if form.is_valid():
+		article_id = form.cleaned_data.get('article_id')
+		article_model = ArticleModel.objects.filter(pk=article_id).first()
+		if article_model:
+			top_model = article_model.top
+			if not top_model:
+				top_model = TopModel()
+			top_model.save()
 
+			article_model.top = top_model
+			article_model.save(update_fields=['top'])
+			return myjson.json_result()
+		else:
+			return myjson.json_params_error(u'文章不存在！')
+	else:
+		message = form.errors
+		return myjson.json_params_error(message)
 
 
 ## 评论管理
 @login_required
-def cms_comment_list(request):
-	pass
+def cms_comment_list(request, page=1):
+	context = ArticleModelHelper.common_page(page=page, model_name=CommentModel,key_name='comments')
+	return render(request, 'cms_comment_list.html',context)
 
 @login_required
+@require_http_methods(['POST'])
 def cms_remove_comment(request):
-	pass
-
+	comment_id = request.POST.get('comment_id',1)
+    if not comment_id:
+        return myjson.json_params_error()
+    comment_model = CommentModel.objects.filter(comment_id).first()
+    if comment_model:
+    	comment_model.is_removed = True
+    	comment_model.save()
+    return myjson.json_result()
 
 
 

@@ -22,8 +22,8 @@ class ArticleModelHelper(object):
 
 
     @classmethod
-    # def post_list(cls, page, sort, board_id):
-    def post_list(cls, page, sort):
+    def article_list(cls, page, sort, category_id):
+    # def article_list(cls, page, sort):
         articleModel = ArticleModel.objects
         article_model = articleModel.all()
 
@@ -31,7 +31,7 @@ class ArticleModelHelper(object):
             articles = article_model.order_by('-create_time')
         elif sort == cls.ArticleSortType.HIGHLIGH_TIME:
             articles = article_model.order_by(
-                '-toparticle__create_time',
+                '-top__create_time',
                 '-create_time')
         elif sort == cls.ArticleSortType.STAR_COUNT:
             articles = articleModel.values('pk').annotate(
@@ -53,9 +53,9 @@ class ArticleModelHelper(object):
 
         articles = articles.filter(is_removed=False)
 
-        # 如果版块选项不为0，就根据版块id选择，如果为0就是全部，不需要筛选
-        # if board_id:
-        #     articles = articles.filter(ArticleModel.board_id == board_id)
+        # 如果分类选项不为0，就根据分类id选择，如果为0就是全部，不需要筛选
+        if category_id:
+            articles = articles.filter(category=category_id)
 
         total_articles = articles.count()
         total_page = total_articles / page_num
@@ -84,13 +84,12 @@ class ArticleModelHelper(object):
         pages.sort()
 
         context = {
-            'articles': articles[start:end],
-            # 'boards': BoardModel.query.all(),
+            'articles': articles.values()[start:end],
             'pages': pages,
             'c_page': page,
             't_page': total_page,
             'c_sort': sort,
-            # 'c_board': board_id,
             'c_category': category_id
+            'category': CategoryModel.objects.all()
         }
         return context

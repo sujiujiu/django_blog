@@ -1,10 +1,10 @@
-{% extends "cms_base_manage.html" %}
+{% extends "cms_base_list.html" %}
 {% load static %}
 
 {% block baseheadblock %}
 	{{block.super}}
-	<link rel="stylesheet" href="{% static 'css/cms_category_manage.css' %}">
-	<script src="{% static 'js/cms_category_manage.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/cms_category_list.css' %}">
+	<script src="{% static 'js/cms_category_list.js' %}"></script>
 {% endblock baseheadblock %}
 
 {% block main_content %}

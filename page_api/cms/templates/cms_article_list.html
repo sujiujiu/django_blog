@@ -1,4 +1,4 @@
-{% extends "cms_base_manage.html" %}
+{% extends "cms_base_list.html" %}
 {% load static %}
 
 {% block titleblock %}
@@ -6,8 +6,8 @@
 
 {% block baseheadblock %}
 	{{block.super}}
-	<link rel="stylesheet" href='{% static "css/cms_article_manage.css" %}'>
-	<script src="{% static 'js/cms_article_manage.js' %}"></script>
+	<link rel="stylesheet" href='{% static "css/cms_article_list.css" %}'>
+	<script src="{% static 'js/cms_article_list.js' %}"></script>
 	<script src='{% static "js/arttemplate.js" %}'></script>
 {% endblock baseheadblock %}
 
@@ -38,7 +38,7 @@
 			</thead>
 			<tbody>
 				{% for article in articles %}
-					<tr data-article-id="{{article.uid}}">
+					<tr data-article-id="{{article.article_id}}">
 						<td><a href="#" class="article-title">
 							{% if article.top %}
 								<span class="top-title-word">[置顶]</span>
@@ -51,7 +51,7 @@
 						<td>{{article.read_count}}</td>
 						<td>0</td>
 						<td>
-							<a href="{% url 'cms_edit_article' pk=article.uid %}">编辑</a> |
+							<a href="{% url 'cms_edit_article' pk=article.article_id %}">编辑</a> |
 							<a href="#" class="top-article-btn">
 								{% if article.top %}
 									取消置顶
@@ -59,7 +59,7 @@
 									置顶
 								{% endif %}
 							</a> |
-							<a href="#" class="delete-article-btn" data-post-id="{{ article.uid }}">删除</a>
+							<a href="#" class="delete-article-btn" data-post-id="{{ article.article_id }}">删除</a>
 						</td>
 					</tr>
 				{% endfor %}
@@ -75,34 +75,34 @@
                         <li class="disabled"><span>&lt;</span></li>
                     {% elif c_page <= 5 %}
                         <li class="disabled"><span>&laquo;</span></li>
-                        <li><a href="{% url 'cms_article_manage' page=c_page-5 category_id=c_category sort=c_sort,board=c_board  %}"> &lt;</a></li>
+                        <li><a href="{% url 'cms_article_list' page=c_page-5 category_id=c_category sort=c_sort,board=c_board  %}"> &lt;</a></li>
                     {% else %}
-                    	<li><a href="{% url 'cms_article_manage' page=c_page-1 category_id=c_category sort=c_sort,board=c_board  %}">&laquo;</a></li>
-                    	<li><a href="{% url 'cms_article_manage' page=c_page-5 category_id=c_category sort=c_sort,board=c_board  %}">&laquo;</a></li>
+                    	<li><a href="{% url 'cms_article_list' page=c_page-1 category_id=c_category sort=c_sort,board=c_board  %}">&laquo;</a></li>
+                    	<li><a href="{% url 'cms_article_list' page=c_page-5 category_id=c_category sort=c_sort,board=c_board  %}">&laquo;</a></li>
                     {% endif %}
 
                     {% for page in pages %}
                         {% if c_page == page %}
                             <li class="active"><span>{{ page }}</span></li>
                         {% else %}
-                        	<li><a href="{% url 'cms_article_manage' page=page category_id=c_category sort=c_sort,board=c_board  %}">{{ page }}</a></li>
+                        	<li><a href="{% url 'cms_article_list' page=page category_id=c_category sort=c_sort,board=c_board  %}">{{ page }}</a></li>
                         {% endif %}
                     {% endfor %}
 
-                    <li><a href="{% url 'cms_article_manage' page=c_page+1 category_id=c_category sort=c_sort board=c_board  %}">……</a></li>
-                    <li><a href="{% url 'cms_article_manage' page=t_page+1 category_id=c_category sort=c_sort board=c_board  %}">{{ t_page }}</a></li>
+                    <li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort board=c_board  %}">……</a></li>
+                    <li><a href="{% url 'cms_article_list' page=t_page+1 category_id=c_category sort=c_sort board=c_board  %}">{{ t_page }}</a></li>
                     <li><span>共{{ t_page }}页</span></li>
 
                     {% if c_page >= t_page %}
                         <li class="disabled"><span>&gt;</span></li>
                         <li class="disabled"><span>&raquo;</span></li>
                     {% elif c_page >= t_page-5 %}
-                    	<li><a href="{% url 'cms_article_manage' page=c_page+1 category_id=c_category sort=c_sort board=c_board  %}">&gt;</a></li>
+                    	<li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort board=c_board  %}">&gt;</a></li>
                         <li class="disabled"><span>&raquo;</span></li>
                     {% else %}
-                    	<li><a href="{% url 'cms_article_manage' page=c_page+1 category_id=c_category sort=c_sort board=c_board  %}">……</a>
+                    	<li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort board=c_board  %}">……</a>
                     	</li>
-                    	<li><a href="{% url 'cms_article_manage' page=t_page+5 category_id=c_category sort=c_sort board=c_board  %}">{{ t_page }}</a></li>
+                    	<li><a href="{% url 'cms_article_list' page=t_page+5 category_id=c_category sort=c_sort board=c_board  %}">{{ t_page }}</a></li>
                     {% endif %}
                 </ul>
             </nav>

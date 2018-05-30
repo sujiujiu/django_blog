@@ -10,11 +10,8 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
-from django.forms import model_to_dict
+from django.forms.models import model_to_dict
 from django.db.models import Count
-
-from qiniu import Auth,put_file
-import qiniu.config
 
 from forms import CMSLoginForm,SettingsForm,ResetEmailForm,ResetpwdForm,\
 				AddCategoryForm,AddTagForm,AddArticleForm,UpdateArticleForm,\
@@ -23,8 +20,12 @@ from forms import CMSLoginForm,SettingsForm,ResetEmailForm,ResetpwdForm,\
 from myblog.models import ArticleModel,CategoryModel,TagModel,TopModel,\
 				CommentModel,ArticleStarModel,BoardModel
 from cmsauth.models import CmsUserModel
+from common.basemodels import ArticleModelHelper
+
 from utils.myemail import send_email
 from utils import myjson
+from qiniu import Auth,put_file
+import qiniu.config
 
 
 # CMS用户管理
@@ -88,6 +89,7 @@ def cms_reset_email(request):
 			return render(request,'cms_reset_email.html',{'error':form.errors})
 
 # 邮箱验证
+@login_required
 def cms_validate_email(request):
 	pass
 
@@ -98,7 +100,7 @@ def cms_reset_pwd(request):
 		return render(request, 'cms_reset_pwd.html')
 	else:
 		username = request.user
-		# 使用cleaned_password方法
+		## 使用cleaned_password方法
 		# form = ResetpwdForm(request.POST,username=username)
 		# return render(request,'cms_reset_pwd.html',{'error':form.errors})
 		# 使用save_password方法
@@ -150,9 +152,10 @@ def cms_settings(request):
 			return myjson.json_result()
 		else:
 			message = form.errors
-			return xtjson.json_params_error(message)
+			return myjson.json_params_error(message)
 
 
+@login_required
 def cms_qiniu_token(request):
 	pass
 
@@ -164,25 +167,116 @@ def cms_qiniu_token(request):
 
 # 文章列表
 @login_required
-def cms_article_list(request):
-	pass
+def cms_article_list(request,page=1,sort=1,category_id=0):
+	context = ArticleModelHelper.article_list(page, sort, category_id)
+	return render(request, 'cms_article_list.html',context)
 
 # 添加文章
 @login_required
 def cms_add_article(request):
-	pass
-
-# 编辑文章
-@login_required
-def cms_edit_article(request):
+	# 1.请求页面时，我们需要获取所有的标签和分类
+	# 2.提交修改后的页面时，检查分类和标签在数据库中是否存在，
+	# 如果不存在则新建，否则存入
+	# 3.文章与标签是多对多关系，与其他内容不一起存
+	# 4.文章与分类不是是多对多关系
 	if request.method == 'GET':
-		return render(request, 'cms_add_article.html')
+		tags = TagModel.objects.all()
+		categorys = CategoryModel.objects.all()
+		context = {
+			'tags':tags,
+			'categorys':categorys
+		}
+		return render(request, 'cms_add_article.html', context)
 	else:
 		form = AddArticleForm(request.POST)
 		if form.is_valid():
-			pass
+			user = request.user
+			tag_ids = request.POST.getlist('tags[]')
+
+			title = form.cleaned_data.get('title')
+			thumbnail = form.cleaned_data.get('thumbnail')
+			content = form.cleaned_data.get('content')
+			category_id = form.cleaned_data.get('category')
+
+			category = CategoryModel.objects.filter(pk=category_id).first()
+
+			article_model = ArticleModel(
+				username=user,
+				title=title,
+				thumbnail=thumbnail,
+				content=content,
+				category=category
+				)
+			article_model.save()
+			# 文章与标签的多对多的保存
+			# 如果选择了标签，则将选择的标签以此存入，否则不用存
+			if tag_ids:
+				for tag_id in tag_ids:
+					tag_model = TagModel.objects.filter(pk=tag_id).first()
+					if tag_model:
+						article_model.tags.add(tag_model)
+			return myjson.json_result()
 		else:
-			return render(request, 'cms_add_article.html',{'error':form.errors})
+			message = form.errors
+			return myjson.json_params_error(message)
+
+			
+# 编辑文章
+@login_required
+def cms_edit_article(request, article_id):
+	'''
+	   它的逻辑和add_article相似，但作者不会变，只需获取文章的id
+	   我们会用到一篇已存在的article里的的所有数据，包括tags
+	   但文章里的tags会通过article.tags多对多的方式获取，而不再从tagmodel获取
+	   因为可能会修改tags，我们仍需要传入所有的tags
+	   因此我们需要将tags添加到article里，而为了方便使用，也为了添加tags
+	   我们会使用到model_to_dict这个函数，将数据库里的数据提取出来并转化成dict类型
+	'''
+	if request.method == 'GET':
+		article_model = ArticleModel.objects.filter(pk=article_id).first()
+		article_dict = model_to_dict(article_model)
+		tag_model = article_model.tags.all()
+		article_dict['tags'] = [tag_model.id for tags in tag_model]
+		context = {
+			'categorys': CategoryModel.objects.all(),
+			'tags': TagModel.objects.all(),
+			'article': article_dict
+		}
+		return render(request, 'cms_add_article.html', context)
+	else:
+		form = EditArticleForm(request.POST)
+		if form.is_valid():
+			tag_ids = request.POST.getlist('tags[]')
+
+			article_id = form.cleaned_data.get('article_id')
+			title = form.cleaned_data.get('title')
+			thumbnail = form.cleaned_data.get('thumbnail')
+			content = form.cleaned_data.get('content')
+			category_id = form.cleaned_data.get('category')
+
+			article_model = ArticleModel.objects.filter(pk=article_id).first()
+			category = CategoryModel.objects.filter(pk=category_id).first()
+
+			# 修改和创建的方式不一样
+			if article_model:
+				article_model.title = title
+				article_model.thumbnail = thumbnail
+				article_model.content = content
+				article_model.category = category
+				article_model.save()
+
+			# 文章与标签的多对多的保存
+			# 如果选择了标签，则将选择的标签以此存入，否则不用存
+			if tag_ids:
+				for tag_id in tag_ids:
+					tag_model = TagModel.objects.filter(pk=tag_id).first()
+					if tag_model:
+						article_model.tags.add(tag_model)
+			return myjson.json_result()
+		else:
+			message = form.errors
+			return myjson.json_params_error(message)
+
 
 
 # 删除文章，后台删除即真正从数据库中删除
@@ -205,13 +299,14 @@ def cms_delete_article(request):
 
 
 # 文章置顶
+@login_required
 def cms_top_article(request):
 	pass
 
 
 
 ## 评论管理
-
+@login_required
 def cms_comment_list(request):
 	pass
 
@@ -221,50 +316,131 @@ def cms_remove_comment(request):
 
 
 
-## 板块管理
-
-def cms_board_list(request):
-	pass
-
-@login_required
-def cms_add_board(request):
-	pass
-
-@login_required
-def cms_edit_board(request):
-	pass
-
-@login_required
-def cms_remove_board(request):
-	pass
-
-
 
 ## tag标签管理
 
+# 标签管理列表
 @login_required
+def cms_tag_list(request):
+	tags = TagModel.objects.all()
+	return render(request, 'cms_tag_list.html', {'tags':tags})
+
+# 增加标签
+@login_required
+@require_http_methods(['POST'])
 def cms_add_tag(request):
-	pass
+	'''如果tag已经存在，则不允许在添加，否则添加
+	'''
+	form = AddTagForm(request.POST)
+	if form.is_valid():
+		tag_name = form.cleaned_data.get('tag_name')
+		tag_model = TagModel.objects.filter(name=tag_name).first()
+		if tag_model:
+			return myjson.json_params_error(u'该标签已存在，请重新设置！')
+		else:
+			tagModel = TagModel(name=tag_name)
+			tagModel.save()
+			return myjson.json_result()
+	else:
+		message = form.errors
+		return myjson.json_params_error(message)
 
+
+# 移除标签
 @login_required
+@require_http_methods(['POST'])
 def cms_remove_tag(request):
-	pass
-
-
+	'''
+	1.如果该标签不存在不能移除，
+	2.如果标签下有文章则不允许移除，
+	因此我们要获取该标签下的所有文章，如果文章数小于0则不允许删除
+	'''
+	form = TagForm(request.POST)
+	if form.is_valid():
+		tag_id = form.cleaned_data.get('tag_id')
+		tag_model = TagModel.objects.filter(pk=tag_id).first()
+		if tag_model:
+			article_count = tag_model.articlemodel_set.all().count()
+			if article_count > 0:
+				return myjson.json_params_error(message=u'该标签下还有文章,不能删除!')
+			else:
+				tag_model.delete()
+				return myjson.json_result()
+		else:
+			return myjson.json_params_error(message=u'该标签不存在！')
+	else:
+		message = form.errors
+		return myjson.json_params_error(message)
+	
 
 ## 分类操作
 
+# 分类管理列表
+@login_required
 def cms_category_list(request):
-	pass
+	categorys = CategoryModel.objects.all()
+	return render(request, 'cms_category_list.html', {'categorys':categorys})
 
+# 增加分类
 @login_required
+@require_http_methods(['POST'])
 def cms_add_category(request):
-	pass
+	'''如果tag已经存在，则不允许在添加，否则添加
+	'''
+	form = AddCategoryForm(request.POST)
+	if form.is_valid():
+		category_name = form.cleaned_data.get('category_name')
+		category_model = CategoryModel.objects.filter(name=category_name).first()
+		if category_model:
+			return myjson.json_params_error(u'该分类已存在，请重新设置！')
+		else:
+			categoryModel = categoryModel(name=category_name)
+			categoryModel.save()
+			return myjson.json_result()
+	else:
+		message = form.errors
+		return myjson.json_params_error(message)
 
+# 编辑分类
 @login_required
+@require_http_methods(['POST'])
 def cms_edit_category(request):
-	pass
+	form = EditCategoryForm(request.POST)
+	if form.is_valid():
+		category_id = form.cleaned_data.get('category_id')
+		category_name = form.cleaned_data.get('category_name')
+		category_model = CategoryModel.objects.filter(pk=category_id).first()
+		if category_model:
+			category_model.name = name
+			category_model.save(update_fields=['name'])
+			return myjson.json_result()
+		else:
+			return myjson.json_params_error(message=u'该分类不存在')
+	else:
+		message = form.errors
+		return myjson.json_params_error(message)
 
+# 移除分类
 @login_required
 def cms_remove_category(request):
-	pass
+	'''
+	1.如果该分类不存在不能移除，
+	2.如果分类下有文章则不允许移除，
+	因此我们要获取该分类下的所有文章，如果文章数小于0则不允许删除
+	'''
+	form = CategoryForm(request.POST)
+	if form.is_valid():
+		category_id = form.cleaned_data.get('category_id')
+		category_model = CategoryModel.objects.filter(pk=category_id).first()
+		if category_model:
+			article_count = category_model.articlemodel_set.all().count()
+			if article_count > 0:
+				return myjson.json_params_error(message=u'该分类下还有文章,不能删除!')
+			else:
+				category_model.delete()
+				return myjson.json_result()
+		else:
+			return myjson.json_params_error(message=u'该分类不存在！')
+	else:
+		message = form.errors
+		return myjson.json_params_error(message)

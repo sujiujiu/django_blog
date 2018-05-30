@@ -14,6 +14,8 @@ from frontauth.decorators import front_login_required
 from frontauth.utils import login,logout
 from forms import FrontLoginForm,FrontRegistForm,ForgetpwdForm,ResetpwdForm,CommentForm
 from frontauth.models import FrontUserModel
+from common.basemodels import ArticleModelHelper
+
 from utils import myjson, myemail
 from utils.myemail import send_email
 
@@ -126,8 +128,9 @@ def sms_captcha(request):
 
 # 文章相关操作
 
-def front_article_list(request):
-    pass
+def front_article_list(request,page=1,sort=1,category_id=0):
+    context = ArticleModelHelper.article_list(page, sort, category_id)
+    return render(request, 'cms_article_list.html',context)
 
 def front_article_detail(request):
     pass

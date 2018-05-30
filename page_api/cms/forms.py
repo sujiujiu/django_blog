@@ -84,7 +84,7 @@ class AddArticleForm(BaseForm):
 	category = forms.IntegerField(required=True)
 	desc = forms.CharField(max_length=200,required=False)
 	thumbnail = forms.URLField(max_length=100,required=False)
-	content_html = forms.CharField()
+	content = forms.CharField()
 
 class EditArticleForm(AddArticleForm):
 	article_id = forms.UUIDField()

@@ -10,7 +10,7 @@ class ArticleModel(models.Model):
     # 如果一个field传了editable=False，那么调用diaogo的model_to_dict的时候会丢失这个字段
     article_id = models.UUIDField(primary_key=True,default=uuid.uuid4)
     title = models.CharField(max_length=100)
-    desc = models.CharField(max_length=200)
+    # desc = models.CharField(max_length=200)
     thumbnail = models.URLField(max_length=200)
     content = models.TextField()
     # auto_now_add只会在第一次存入当前时间，之后不会修改该值

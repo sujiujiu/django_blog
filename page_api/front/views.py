@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import top
-
 from django.conf import settings
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
@@ -30,7 +28,7 @@ def front_login(request):
     else:
         form = FrontLoginForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('telephone')
+            email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             remember = form.cleaned_data.get('remember')
 
@@ -54,10 +52,21 @@ def front_login(request):
 
 
 def front_regist(request):
-    pass
+    if request.method == 'GET':
+        return render(request,'front_regist.html')
+    else:
+        form = FrontLoginForm(request.POST)
+        if form.is_valid():
+            telephone = form.cleaned_data.get('telephone')
+            user = FrontRegistForm(telephone=telephone)
+            user.save()
+            return redirect(reverse('front_index')) 
+        else:
+            message = form.get_error()
+            return myjson.json_params_error(message)
 
 
-# @front_login_required
+@front_login_required
 def front_logout(request):
     logout(request)
     return redirect(reverse('front_index'))
@@ -65,7 +74,28 @@ def front_logout(request):
 
 # 修改邮箱
 def front_reset_email(request):
-    pass
+    if request.method == 'GET':
+        return render(request, 'front_reset_email.html')
+    else:
+        # 如果邮箱在数据库存在，则无需修改
+        # 否则才允许修改新密码
+        form = ResetEmailForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email', None)
+            if email:
+                if request.email == email:
+                    return myjson.json_params_error(u'新邮箱与老邮箱一致，无需修改！')
+                else:
+                    if send_mail(receivers=email):
+                        return myjson.json_result(u'该邮箱已经发送验证码了！')
+                    else:
+                        return myjson.json_server_error()
+            else:
+                message = form.get_error()
+                return myjson.json_params_error(message)
+        else:
+            message = form.get_error()
+            return myjson.json_params_error(message)
 
 # 邮箱验证
 def front_validate_email(request):
@@ -90,47 +120,13 @@ def front_forget_pwd(request):
 def front_qiniu_token(request):
     pass
 
-# 短信验证码
-def sms_captcha(request):
-    telephone = request.GET.get('telephone')
-    # 获取用户名，用于发送短信验证码显示用户名
-    # username = flask.request.args.get('username')
-    if not telephone:
-        return myjson.json_params_error(message=u'必须指定手机号码！')
-    if cache.get(telephone):
-        return myjson.json_params_error(message=u'验证码已发送，请1分钟后重复发送！')
-    # if not username:
-    #     return myjson.json_params_error(message=u'必须输入用户名！')
-    # 阿里大于APP_KEY及APP_SECRET
-    app_key = settings.APP_KEY
-    app_secret = settings.APP_SECRET
-    req = top.setDefaultAppInfo(app_key, app_secret)
-    req = top.api.AlibabaAliqinFcSmsNumSendRequest()
-    req.extend = ""
-    req.sms_type = 'normal'
-    # 签名名称
-    req.sms_free_sign_name = settings.SIGN_NAME
-    # 随即生成字符串
-    captcha = Captcha.gene_text()
-    # 设置短信的模板
-    req.sms_param = "{code:%s}" % captcha
-    # req.sms_param = "{username:%s,code:%s}" % (username, captcha)
-    req.rec_num = telephone.decode('utf-8').encode('ascii')
-    req.sms_template_code = settings.TEMPLATE_CODE
-    try:
-        resp = req.getResponse()
-        cache.set(telephone, captcha, 120)
-        return myjson.json_result()
-    except Exception, e:
-        print e
-        return myjson.json_server_error()
 
 
 # 文章相关操作
 
 def front_article_list(request,page=1,sort=1,category_id=0):
     context = ArticleModelHelper.article_list(page, sort, category_id)
-    return render(request, 'cms_article_list.html',context)
+    return render(request, 'front_article_list.html',context)
 
 def front_article_detail(request):
     pass

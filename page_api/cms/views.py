@@ -96,9 +96,10 @@ def cms_reset_email(request):
 				        return myjson.json_server_error()
 	        else:
 	        	message = form.get_error()
-	            return myjson.json_params_error(message)
+	        	return myjson.json_params_error(message)
 		else:
-			return render(request,'cms_reset_email.html',{'error':form.errors})
+			message = form.get_error()
+	        return myjson.json_params_error(message)
 
 # 邮箱验证
 @login_required

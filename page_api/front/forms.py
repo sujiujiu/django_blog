@@ -29,12 +29,15 @@ class FrontRegistForm(forms.Form):
 	'''
 	telephone = forms.CharField(max_length=11,\
 		validators=[RegexValidator("^1(3|4|5|7|8)\d{9}$","手机号码有误")])
-	password = forms.CharField(max_length=20, min_length=6)
+	# password = forms.CharField(max_length=20, min_length=6)
 	sms_captcha = forms.CharField(max_length=6)
 
 
 class ForgetpwdForm(BaseForm,CaptchaForm):
 	email = forms.EmailField()
+
+class ResetEmailForm(BaseForm):
+	email = forms.EmailField(required=True)
 
 class ResetpwdForm(BaseForm):
 	password = forms.CharField(max_length=20,min_length=6)

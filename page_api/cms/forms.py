@@ -107,4 +107,4 @@ class EditCategoryForm(CategoryForm):
 
 	
 class DeleteCommentForm(BaseForm):
-	comment_id = forms.UUIDField()
+	comment_id = forms.UUIDField(error_messages={'required':u'必须输入评论id！'})

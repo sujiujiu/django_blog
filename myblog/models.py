@@ -23,6 +23,8 @@ class ArticleModel(models.Model):
     author = models.ForeignKey(User, null=False)
     # board = models.ForeignKey('BoardModel', null=True)
     category = models.ForeignKey('CategoryModel')
+    # SET_NULL和CASCADE的区别在于，后者级联删除，而前者只是改为NULL
+    # 设置ForeignKey 为 null; 这个只有设置了null 为 True的情况才能用
     top = models.ForeignKey('TopModel',null=True,on_delete=models.SET_NULL)
     tags = models.ManyToManyField('TagModel', blank=True)
 
@@ -49,12 +51,12 @@ class CommentModel(models.Model):
     is_removed = models.BooleanField(default=False)
 
     author = models.ForeignKey(User, null=True)
-    post = models.ForeignKey('ArticleModel',null=False)
-    comment = models.ForeignKey('CommentModel',null=True)
+    article = models.ForeignKey('ArticleModel')
+    comment = models.ForeignKey('CommentModel')
 
 
 # 点赞
 class ArticleStarModel(models.Model):
     create_time = models.DateTimeField(auto_now=True)
-    post = models.ForeignKey('ArticleModel',null=False)
-    author = models.ForeignKey(User, null=True)
+    article = models.ForeignKey('ArticleModel')
+    author = models.ForeignKey(User)

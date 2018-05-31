@@ -86,33 +86,22 @@ def cms_reset_email(request):
 		form = ResetEmailForm(request.POST)
 		if form.is_valid():
 			email = form.cleaned_data.get('email', None)
+			user = request.user
 			if email:
-				if request.email == email:
+				if user.email == email:
 					return myjson.json_params_error(u'新邮箱与老邮箱一致，无需修改！')
 				else:
 					if send_mail(receivers=email):
-						return myjson.json_result(u'该邮箱已经发送验证码了！')
+						user.email = email
+						user.save(update_fields=['email'])
+						return myjson.json_result(u'该邮箱验证成功！')
 				    else:
 				        return myjson.json_server_error()
 	        else:
-	        	message = form.get_error()
-	        	return myjson.json_params_error(message)
+	        	return myjson.json_params_error(message=u'必须输入邮箱！')
 		else:
 			message = form.get_error()
 	        return myjson.json_params_error(message)
-
-# 邮箱验证
-@login_required
-def cms_validate_email(request, email):
-	# cache的保存期设置为2分钟，如果还能获取，则说明验证码已发送
-	# 否则链接失效
-	if cache.get(email):
-		user = request.user
-		user.email = email
-		user.save(update_fields=['email'])
-		return myjson.json_result(u'该邮箱验证成功！')
-	else:
-		return myjson.json_params_error(u'链接已失效！')
 
 # 修改密码
 @login_required
@@ -328,26 +317,37 @@ def cms_delete_article(request):
 # 文章置顶
 @login_required
 def cms_top_article(request):
-	'''
-		1. 不管数据库中该文章是否已经置顶，都保存，这样可以更改文章修改时间
-		2. 如果没有置顶则置顶，有则直接保存
-		3. 修改TopModel，之后也要更改ArticleModel，只需要更改top字段
+	'''置顶和取消置顶
+		1. 如果文章已置顶则无需再置顶，未置顶则置顶。
+		2. 如果选择的是置顶（不置顶），而数据库中存的也是置顶（不置顶），
+			则不需操作，抛出异常
+			如果选择的是置顶，而数据库中存的是不置顶，则删除该字段
+			如果选择的是不置顶，而数据库中存的是置顶，则创建改字段
+		3. 修改TopModel之后也要更改ArticleModel的top字段
 	'''
 	form = TopArticleForm(request.POST)
 	if form.is_valid():
 		article_id = form.cleaned_data.get('article_id')
+		# 本文章选择的是置顶还是不置顶
+		is_top = form.cleaned_data.get('is_top')
 		article_model = ArticleModel.objects.filter(pk=article_id).first()
 		if article_model:
 			top_model = article_model.top
-			if not top_model:
-				top_model = TopModel()
-			top_model.save()
-
-			article_model.top = top_model
-			article_model.save(update_fields=['top'])
-			return myjson.json_result()
-		else:
-			return myjson.json_params_error(u'文章不存在！')
+			if is_top:
+				if top_model:
+					return myjson.json_params_error(message=u'该文章已经置顶！')
+				else:
+					top_model = TopModel()
+					top_model.save()
+					article_model.top = top_model
+					article_model.save(update_fields=['top'])
+					return myjson.json_result()
+			else:
+				if top_model:
+					top_model.delete()
+					return myjson.json_result()
+				else:
+					return myjson.json_params_error(message=u'该文章没有置顶！')
 	else:
 		message = form.errors
 		return myjson.json_params_error(message)

@@ -38,20 +38,42 @@ class ForgetpwdForm(BaseForm,CaptchaForm):
 
 class ResetEmailForm(BaseForm):
 	email = forms.EmailField(required=True)
-
-class ResetpwdForm(BaseForm):
-	password = forms.CharField(max_length=20,min_length=6)
-	password_repeat = forms.CharField(max_length=20,min_length=6)
+	captcha = forms.CharField(max_length=4,min_length=4,required=True)
 
 	def clean(self):
-		password = self.cleaned_data.get('password')
-		password_repeat = self.cleaned_data.get('password_repeat')
-		if password != password_repeat:
-			raise forms.ValidationError(u'两个密码不一致')
+		email = self.cleaned_data.get('email')
+        captcha = self.cleaned_data.get('captcha')
+        captcha_cache = cache.get(email)
+        if not captcha_cache or captcha_cache.lower()!= captcha:
+            raise ValidationError(message=u'验证码错误！')
+        return True
 
+class ResetpwdForm(BaseForm):
+	oldpwd = forms.CharField(max_length=20, min_length=6)
+	newpwd = forms.CharField(max_length=20, min_length=6)
+	newpwd_repeat = forms.CharField(max_length=20,min_length=6)
+
+	def clean(self):
+		newpwd = self.cleaned_data.get('newpwd')
+		newpwd_repeat = self.cleaned_data.get('newpwd_repeat')
+		if newpwd != newpwd_repeat:
+			raise forms.ValidationError(u'两个密码不一致')
 		return self.cleaned_data
 
 
 class CommentForm(BaseForm):
 	content = forms.CharField(max_length=200)
 	article_id = forms.CharField()
+
+
+class AddArticleForm(BaseForm):
+	title = forms.CharField(max_length=200)
+	category = forms.IntegerField(required=True)
+	# desc = forms.CharField(max_length=200,required=False)
+	thumbnail = forms.URLField(max_length=100,required=False)
+	content = forms.CharField()
+
+
+class SettingsForm(BaseForm):
+	avatar = forms.URLField(max_length=100,required=False)
+	username = forms.CharField(max_length=10,min_length=4,required=False)

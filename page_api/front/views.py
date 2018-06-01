@@ -109,12 +109,40 @@ def front_settings(request):
     if request.method == 'GET':
         return render(request, 'front_settings.html')
     else:
-        pass
+        form = SettingsForm(request.POST)
+        if form.is_valid():
+            pass
+        else:
+            message = form.errors
+            return myjson.json_params_error(message)
 
 
 @front_login_required
 def front_reset_pwd(request):
-    pass
+    if request.method == 'GET':
+        return render(request, 'front_reset_pwd.html')
+    else:
+        username = request.user
+        ## 使用cleaned_password方法
+        # form = ResetpwdForm(request.POST,username=username)
+        # return render(request,'front_reset_pwd.html',{'error':form.errors})
+        # 使用save_password方法
+        form = ResetpwdForm(request.POST,user=username)
+        if form.is_vaild():
+            oldpwd = form.cleaned_data.get('oldpwd')
+            user = authenticate(username=username,password=oldpwd)
+            if user:
+                is_vaild = form.save_password()
+                if is_vaild:
+                    return myjson.json_result()
+                else:
+                    return myjson.json_params_error(message=u'密码验证错误！')
+            else:
+                user = user.create(username=username,password=newpwd)
+                return myjson.json_result()
+        else:
+            message = form.errors
+            return myjson.json_params_error(message)
 
 
 
@@ -172,6 +200,7 @@ def front_article_detail(request, article_id):
             'c_category': article_model.category,
             # 当前文章分类
             'c_tag': article_model.tags,
+            'star_author_ids': star_author_ids
         }
     else:
         return myjson.json_params_error(u'该文章不存在！')

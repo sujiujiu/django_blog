@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 from django import forms
+from django.core.cache import cache
 from utils.captcha.mycaptcha import Captcha
 from utils import myjson
 from page_api.common.forms import BaseForm
@@ -27,6 +28,15 @@ class SettingsForm(BaseForm):
 
 class ResetEmailForm(BaseForm):
 	email = forms.EmailField(required=True)
+	captcha = forms.CharField(max_length=4,min_length=4,required=True)
+
+	def clean(self):
+		email = self.cleaned_data.get('email')
+        captcha = self.cleaned_data.get('captcha')
+        captcha_cache = cache.get(email)
+        if not captcha_cache or captcha_cache.lower()!= captcha:
+            raise ValidationError(message=u'验证码错误！')
+        return True
 
 class ResetpwdForm(BaseForm):
 	oldpwd = forms.CharField(max_length=20, min_length=6)
@@ -94,7 +104,7 @@ class DeleteArticleForm(BaseForm):
 
 
 class TopArticleForm(DeleteArticleForm):
-	pass
+	is_top = forms.BooleanField(required=True,default=False)
 
 class CategoryForm(BaseForm):
 	category_id = forms.IntegerField()

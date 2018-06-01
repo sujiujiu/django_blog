@@ -129,7 +129,7 @@ def cms_reset_pwd(request):
 				return myjson.json_result()
 		else:
 			message = form.errors
-			return xtjson.json_params_error(message)
+			return myjson.json_params_error(message)
 
 @login_required
 def cms_profile(request):

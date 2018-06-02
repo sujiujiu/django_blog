@@ -76,4 +76,8 @@ class AddArticleForm(BaseForm):
 
 class SettingsForm(BaseForm):
 	avatar = forms.URLField(max_length=100,required=False)
-	username = forms.CharField(max_length=10,min_length=4,required=False)
+	username = forms.CharField(max_length=20,min_length=4,required=False)
+	realname = forms.CharField(max_length=10,min_length=2,required=False)
+	qq = forms.CharField(max_length=20,min_length=5,required=False)
+	signature = forms.CharField(max_length=30,min_length=1,required=False)
+	gender = forms.IntegerField(required=False)

@@ -67,20 +67,20 @@ class ResetpwdForm(BaseForm):
             raise forms.ValidationError("密码错误")
          return valid
 
-	def cleaned_password(self):
-		oldpwd = self.cleaned_data.get('oldpwd')
-		newpwd = self.cleaned_data.get('newpwd')
-		user = authenticate(username=self.username,password=oldpwd)
-		if user:
-			is_vaild = user.check_password(oldpwd)
-			if is_vaild:
-				user.set_password(newpwd)
-				user.save()
-			else:
-				raise forms.ValidationError(u'密码错误')
-		else:
-			user = user.create(username=username,password=newpwd)
-		return user
+	# def cleaned_password(self):
+	# 	oldpwd = self.cleaned_data.get('oldpwd')
+	# 	newpwd = self.cleaned_data.get('newpwd')
+	# 	user = authenticate(username=self.username,password=oldpwd)
+	# 	if user:
+	# 		is_vaild = user.check_password(oldpwd)
+	# 		if is_vaild:
+	# 			user.set_password(newpwd)
+	# 			user.save()
+	# 		else:
+	# 			raise forms.ValidationError(u'密码错误')
+	# 	else:
+	# 		user = user.create(username=username,password=newpwd)
+	# 	return user
 
 
 class TagForm(BaseForm):

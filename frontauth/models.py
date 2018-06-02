@@ -6,16 +6,25 @@ from django.db import models
 import uuid
 import hashers
 
+class GenderType(object):
+    MAN = 1
+    WOMAN = 2
+    SECRET = 3
+
 class FrontUserModel(models.Model):
     uid = models.UUIDField(primary_key=True,default=uuid.uuid4)
     telephone = models.CharField(max_length=11,unique=True,default='18888888888')
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=20)
     _password = models.CharField(max_length=128)
-    avatar = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
+    avatar = models.URLField(blank=True)
+    qq = models.CharField(max_length=20)
+    realname = models.CharField(max_length=20)
+    signature = models.CharField(max_length=100)
+    gender = models.IntegerField(default=GenderType.SECRET)
 
     def __init__(self,*args,**kwargs):
         if 'password' in kwargs:

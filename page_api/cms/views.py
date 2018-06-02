@@ -24,8 +24,6 @@ from common.basemodels import ArticleModelHelper
 
 from utils.myemail import send_email
 from utils import myjson
-import qiniu
-import qiniu.config
 
 
 # CMS用户管理
@@ -100,8 +98,7 @@ def cms_reset_email(request):
 	        else:
 	        	return myjson.json_params_error(message=u'必须输入邮箱！')
 		else:
-			message = form.get_error()
-	        return myjson.json_params_error(message)
+	        return render(request, 'cms_reset_email.html', {'error':form.get_error()})
 
 # 修改密码
 @login_required
@@ -128,8 +125,7 @@ def cms_reset_pwd(request):
 				user = user.create(username=username,password=newpwd)
 				return myjson.json_result()
 		else:
-			message = form.errors
-			return myjson.json_params_error(message)
+			return render(request, 'cms_reset_pwd.html', {'error':form.get_error()})
 
 @login_required
 def cms_profile(request):
@@ -162,8 +158,7 @@ def cms_settings(request):
 			cms_user.save()
 			return myjson.json_result()
 		else:
-			message = form.errors
-			return myjson.json_params_error(message)
+			return render(request, 'cms_settings.html', {'error':form.get_error()})
 
 
 @login_required
@@ -235,9 +230,7 @@ def cms_add_article(request):
 						article_model.tags.add(tag_model)
 			return myjson.json_result()
 		else:
-			message = form.errors
-			return myjson.json_params_error(message)
-
+			return render(request, 'cms_add_article.html', {'error':form.get_error()})
 			
 # 编辑文章
 @login_required
@@ -292,8 +285,7 @@ def cms_edit_article(request, article_id):
 						article_model.tags.add(tag_model)
 			return myjson.json_result()
 		else:
-			message = form.errors
-			return myjson.json_params_error(message)
+			return render(request, 'cms_edit_article.html', {'error':form.get_error()})
 
 
 # 删除文章，后台删除即真正从数据库中删除

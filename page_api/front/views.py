@@ -10,12 +10,14 @@ from django.views.decorators.http import require_http_methods
 from frontauth import configs
 from frontauth.decorators import front_login_required
 from frontauth.utils import login,logout
-from forms import FrontLoginForm,FrontRegistForm,ForgetpwdForm,ResetpwdForm,CommentForm
+from forms import FrontLoginForm,FrontRegistForm,ForgetpwdForm,\
+        ResetEmailForm,ResetpwdForm,CommentForm,AddArticleForm,SettingsForm
 from frontauth.models import FrontUserModel
 from common.basemodels import ArticleModelHelper
 
 from utils import myjson, myemail
 from utils.myemail import send_email
+
 
 # 个人设置
 
@@ -62,8 +64,7 @@ def front_regist(request):
             user.save()
             return redirect(reverse('front_index')) 
         else:
-            message = form.get_error()
-            return myjson.json_params_error(message)
+            return render(request, 'front_regist.html', {'error':form.get_error()})
 
 
 @front_login_required
@@ -97,8 +98,7 @@ def front_reset_email(request):
             else:
                 return myjson.json_params_error(message=u'必须输入邮箱！')
         else:
-            message = form.get_error()
-            return myjson.json_params_error(message)
+            return render(request, 'front_reset_email.html', {'error':form.get_error()})
 
 
 def front_profile(request):
@@ -111,10 +111,29 @@ def front_settings(request):
     else:
         form = SettingsForm(request.POST)
         if form.is_valid():
-            pass
+            username = form.cleaned_data.get('username', None)
+            realname = form.cleaned_data.get('realname', None)
+            qq = form.cleaned_data.get('qq', None)
+            avatar = form.cleaned_data.get('avatar', None)
+            signature = form.cleaned_data.get('signature', None)
+            gender = form.cleaned_data.get('gender', None)
+            # 用户登录之后只要获取当前用户的信息，然后就可以直接传入数据
+            user_model = request.user
+            # 只有用户名是必填项，其他如果没有可以不填，所以需要判断,而性别是有默认选项
+            user_model.username = username
+            user_model.gender = gender
+            if realname:
+                user_model.realname = realname
+            if qq:
+                user_model.qq = qq
+            if avatar:
+                user_model.avatar = avatar
+            if signature:
+                user_model.signature = signature
+            user_model.save()
+            return myjson.json_result()
         else:
-            message = form.errors
-            return myjson.json_params_error(message)
+            return render(request, 'cms_reset_email.html', {'error':form.get_error()})
 
 
 @front_login_required
@@ -123,17 +142,16 @@ def front_reset_pwd(request):
         return render(request, 'front_reset_pwd.html')
     else:
         username = request.user
-        ## 使用cleaned_password方法
-        # form = ResetpwdForm(request.POST,username=username)
-        # return render(request,'front_reset_pwd.html',{'error':form.errors})
-        # 使用save_password方法
         form = ResetpwdForm(request.POST,user=username)
         if form.is_vaild():
             oldpwd = form.cleaned_data.get('oldpwd')
-            user = authenticate(username=username,password=oldpwd)
+            newpwd = form.cleaned_data.get('newpwd')
+            user = FrontUserModel.objects.filter(username=username,password=oldpwd).first()
             if user:
-                is_vaild = form.save_password()
+                is_vaild = user.check_password()
                 if is_vaild:
+                    user.set_password(newpwd)
+                    user.save()
                     return myjson.json_result()
                 else:
                     return myjson.json_params_error(message=u'密码验证错误！')
@@ -141,19 +159,28 @@ def front_reset_pwd(request):
                 user = user.create(username=username,password=newpwd)
                 return myjson.json_result()
         else:
-            message = form.errors
-            return myjson.json_params_error(message)
-
+           return render(request, 'front_reset_pwd.html', {'error':form.get_error()})
 
 
 @front_login_required
 def front_forget_pwd(request):
-    pass
-
-
-@front_login_required
-def front_qiniu_token(request):
-    pass
+    if request.method == 'GET':
+        return render(request,'front_forget_pwd.html')
+    else:
+        form = ForgetpwdForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            # request,email,check_url,cache_data=None,subject=None,message
+            user = FrontUserModel.objects.filter(email=email).first()
+            if user:
+                if send_email(request,email,'front_reset_password'):
+                    return HttpResponse(u'邮件发送成功')
+                else:
+                    return HttpResponse(u'邮件发送失败')
+            else:
+                return HttpResponse(u'该邮件不存在')
+        else:
+            return render(request,'front_forget_pwd.html',{'error':form.get_error()})
 
 
 
@@ -208,12 +235,26 @@ def front_article_detail(request, article_id):
 # 添加文章
 @front_login_required
 def front_add_article(request):
-    pass
+    if request.method == 'GET':
+        return render(request,'front_add_article.html')
+    else:
+        form = AddArticleForm(request.POST)
+        if form.is_valid():
+            pass
+        else:
+            return render(request,'front_add_article.html',{'errors':form.error})
 
 # 编辑文章
 @front_login_required
 def front_edit_article(request):
-    pass
+    if request.method == 'GET':
+        return render(request,'front_add_article.html')
+    else:
+        form = AddArticleForm(request.POST)
+        if form.is_valid():
+            pass
+        else:
+            return render(request,'front_add_article.html',{'errors':form.error})
 
 # 删除文章，和后端不同，前台只删除，但不真正删除
 @front_login_required
@@ -238,13 +279,27 @@ def front_comment_list(request):
     pass
 
 def front_add_comment(request):
-    pass
+    if request.method == 'GET':
+        return render(request,'front_add_article.html')
+    else:
+        form = AddArticleForm(request.POST)
+        if form.is_valid():
+            pass
+        else:
+            return render(request,'front_add_article.html',{'errors':form.error})
 
 def front_delete_comment(request):
     pass
 
 def front_reply_comment(request):
-    pass
+    if request.method == 'GET':
+        return render(request,'front_add_article.html')
+    else:
+        form = AddArticleForm(request.POST)
+        if form.is_valid():
+            pass
+        else:
+            return render(request,'front_add_article.html',{'errors':form.error})
 
 def front_search(request):
     pass

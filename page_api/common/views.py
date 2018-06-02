@@ -5,9 +5,13 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect,reverse
 from django.core.cache import cache
 from django.conf import settings
+from django.views.decorators.http import require_http_methods
+
+from frontauth.decorators import front_login_required
 
 from utils.captcha.mycaptcha import Captcha
 from utils import myjson
+import qiniu
 
 from PIL import Image
 try:
@@ -61,3 +65,15 @@ def sms_captcha(request):
     except Exception, e:
         print e
         return myjson.json_server_error()
+
+
+@front_login_required
+@require_http_methods(['GET'])
+def qiniu_token(request):
+    # 授权
+    q = qiniu.Auth(settings.QINIU_ACCESS_KEY, settings.QINIU_SECRET_KEY)
+    # 选择七牛的云空间
+    bucket_name = 'myblog-article'
+    # 生成token
+    token = q.upload_token(bucket_name)
+    return myjson.json_result({'uptoken': token})

@@ -14,6 +14,10 @@ from forms import FrontLoginForm,FrontRegistForm,ForgetpwdForm,\
         ResetEmailForm,ResetpwdForm,CommentForm,AddArticleForm,SettingsForm
 from frontauth.models import FrontUserModel
 from common.basemodels import ArticleModelHelper
+from common.views import add_article as front_add_article, \
+                        edit_article as front_edit_article, \
+                        reset_email as front_reset_email,\
+                        qiniu_token as front_qiniu_token,
 
 from utils import myjson, myemail
 from utils.myemail import send_email
@@ -75,35 +79,15 @@ def front_logout(request):
 
 # 修改邮箱
 @front_login_required
-def front_reset_email(request):
-    if request.method == 'GET':
-        return render(request, 'front_reset_email.html')
-    else:
-        # 如果邮箱在数据库存在，则无需修改
-        # 否则才允许修改新密码
-        form = ResetEmailForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('email', None)
-            user = request.user
-            if email:
-                if request.email == email:
-                    return myjson.json_params_error(u'新邮箱与老邮箱一致，无需修改！')
-                else:
-                    if send_mail(receivers=email):
-                        user.email = email
-                        user.save(update_fields=['email'])
-                        return myjson.json_result(u'该邮箱验证成功！')
-                    else:
-                        return myjson.json_server_error()
-            else:
-                return myjson.json_params_error(message=u'必须输入邮箱！')
-        else:
-            return render(request, 'front_reset_email.html', {'error':form.get_error()})
+front_reset_email(front_or_cms='front')
 
 
+# 个人主页
 def front_profile(request):
     return render(request, 'front_profile.html')
 
+
+# 设置
 @front_login_required
 def front_settings(request):
     if request.method == 'GET':
@@ -135,7 +119,7 @@ def front_settings(request):
         else:
             return render(request, 'cms_reset_email.html', {'error':form.get_error()})
 
-
+# 重置密码
 @front_login_required
 def front_reset_pwd(request):
     if request.method == 'GET':
@@ -161,7 +145,7 @@ def front_reset_pwd(request):
         else:
            return render(request, 'front_reset_pwd.html', {'error':form.get_error()})
 
-
+# 忘记密码
 @front_login_required
 def front_forget_pwd(request):
     if request.method == 'GET':
@@ -234,27 +218,12 @@ def front_article_detail(request, article_id):
 
 # 添加文章
 @front_login_required
-def front_add_article(request):
-    if request.method == 'GET':
-        return render(request,'front_add_article.html')
-    else:
-        form = AddArticleForm(request.POST)
-        if form.is_valid():
-            pass
-        else:
-            return render(request,'front_add_article.html',{'errors':form.error})
+front_add_article(front_or_cms='front')
 
 # 编辑文章
 @front_login_required
-def front_edit_article(request):
-    if request.method == 'GET':
-        return render(request,'front_add_article.html')
-    else:
-        form = AddArticleForm(request.POST)
-        if form.is_valid():
-            pass
-        else:
-            return render(request,'front_add_article.html',{'errors':form.error})
+front_edit_article(article_id, front_or_cms='front')
+
 
 # 删除文章，和后端不同，前台只删除，但不真正删除
 @front_login_required
@@ -267,17 +236,51 @@ def front_delete_article(request, article_id):
     else:
         return myjson.json_params_error(u'该文章不存在！')
 
-# 文章置顶
-def front_top_article(request):
-    pass
 
 # 文章点赞
+@require_http_methods(['POST'])
 def front_article_star(request):
-    pass
+    '''点赞和取消点赞，同置顶
+        1. 如果文章已点赞则无需再点赞，未点赞则点赞。
+        2. 如果选择的是点赞（不点赞），而数据库中存的也是点赞（不点赞），
+            则不需操作，抛出异常
+            如果选择的是点赞，而数据库中存的是不点赞，则删除该字段
+            如果选择的是不点赞，而数据库中存的是点赞，则创建改字段
+        3. 修改TopModel之后也要更改ArticleModel的top字段
+    '''
+    form = ArticleStarForm(request.POST)
+    if form.is_valid():
+        article_id = form.cleaned_data.get('article_id')
+        # 本文章选择的是置顶还是不置顶
+        is_star = form.cleaned_data.get('is_star')
+        article_model = ArticleModel.objects.filter(pk=article_id).first()
+        star_model = ArticleStarModel.objects.filter(pk=article_id).first()
+        if article_model:
+            star_model = article_model.star
+            if is_star:
+                if star_model:
+                    return myjson.json_params_error(message=u'该文章已经置顶！')
+                else:
+                    star_model = ArticleStarModel()
+                    star_model.author = request.user
+                    star_model.article = article_model
+                    star_model.save()
+                    return myjson.json_result()
+            else:
+                if star_model:
+                    star_model.delete()
+                    return myjson.json_result()
+                else:
+                    return myjson.json_params_error(message=u'该文章没有置顶！')
+    else:
+        return myjson.json_params_error(message=form.get_error())
 
-def front_comment_list(request):
-    pass
+# 评论列表
+def front_comment_list(request, page=1):
+    context = ArticleModelHelper.common_page(page=page, model_name=CommentModel,key_name='comments')
+    return render(request, 'front_comment_list.html',context)
 
+# 增加评论
 def front_add_comment(request):
     if request.method == 'GET':
         return render(request,'front_add_article.html')
@@ -288,9 +291,11 @@ def front_add_comment(request):
         else:
             return render(request,'front_add_article.html',{'errors':form.error})
 
+# 删除评论
 def front_delete_comment(request):
     pass
 
+# 回复评论
 def front_reply_comment(request):
     if request.method == 'GET':
         return render(request,'front_add_article.html')
@@ -301,5 +306,6 @@ def front_reply_comment(request):
         else:
             return render(request,'front_add_article.html',{'errors':form.error})
 
+# 查找
 def front_search(request):
     pass

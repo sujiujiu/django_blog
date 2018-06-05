@@ -66,6 +66,12 @@ class CommentForm(BaseForm):
 	article_id = forms.CharField()
 
 
+class ReplyCommentForm(BaseForm):
+    post_id = forms.IntegerField(required=True)
+    content = forms.CharField(max_length=200,min_length=1,required=True)
+    comment_id = IntegerField()
+
+
 class AddArticleForm(BaseForm):
 	title = forms.CharField(max_length=200)
 	category = forms.IntegerField(required=True)
@@ -81,3 +87,9 @@ class SettingsForm(BaseForm):
 	qq = forms.CharField(max_length=20,min_length=5,required=False)
 	signature = forms.CharField(max_length=30,min_length=1,required=False)
 	gender = forms.IntegerField(required=False)
+
+
+class ArticleStarForm(BaseForm):
+	article_id = forms.UUIDField(error_messages={'required':u'必须输入文章id'})
+	is_star = forms.BooleanField(required=True,default=False)
+

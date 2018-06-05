@@ -134,7 +134,7 @@ def add_article(request, front_or_cms='front'):
             return render(request, '%s_add_article.html' % front_or_cms, {'error':form.get_error()})
             
 # 编辑文章
-def edit_article(request, article_id, front_or_cms='front'):
+def edit_article(request, front_or_cms='front'):
     '''
        它的逻辑和add_article相似，但作者不会变，只需获取文章的id
        我们会用到一篇已存在的article里的的所有数据，包括tags
@@ -144,16 +144,20 @@ def edit_article(request, article_id, front_or_cms='front'):
        我们会使用到model_to_dict这个函数，将数据库里的数据提取出来并转化成dict类型
     '''
     if request.method == 'GET':
-        article_model = ArticleModel.objects.filter(pk=article_id).first()
-        article_dict = model_to_dict(article_model)
-        tag_model = article_model.tags.all()
-        article_dict['tags'] = [tag_model.id for tags in tag_model]
-        context = {
-            'categorys': CategoryModel.objects.all(),
-            'tags': TagModel.objects.all(),
-            'article': article_dict
-        }
-        return render(request, '%s_add_article.html' % front_or_cms, context)
+        article_id = request.GET.get('article_id', None):
+        if article_id:
+            article_model = ArticleModel.objects.filter(pk=article_id).first()
+            article_dict = model_to_dict(article_model)
+            tag_model = article_model.tags.all()
+            article_dict['tags'] = [tag_model.id for tags in tag_model]
+            context = {
+                'categorys': CategoryModel.objects.all(),
+                'tags': TagModel.objects.all(),
+                'article': article_dict
+            }
+            return render(request, '%s_add_article.html' % front_or_cms, context)
+        else:
+            return myjson.json_params_error(u'没有该id！')
     else:
         form = EditArticleForm(request.POST)
         if form.is_valid():

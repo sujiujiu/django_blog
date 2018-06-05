@@ -52,7 +52,7 @@ class CommentModel(models.Model):
 
     author = models.ForeignKey(User, null=True)
     article = models.ForeignKey('ArticleModel')
-    comment = models.ForeignKey('CommentModel')
+    reply = models.ForeignKey('CommentModel', related_name='reply', null=True, blank=True)
 
 
 # 点赞

@@ -11,7 +11,8 @@ from frontauth import configs
 from frontauth.decorators import front_login_required
 from frontauth.utils import login,logout
 from forms import FrontLoginForm,FrontRegistForm,ForgetpwdForm,\
-        ResetEmailForm,ResetpwdForm,CommentForm,AddArticleForm,SettingsForm
+        ResetEmailForm,ResetpwdForm,CommentForm,ReplyCommentForm,\
+        AddArticleForm,SettingsForm
 from frontauth.models import FrontUserModel
 from common.basemodels import ArticleModelHelper
 from common.views import add_article as front_add_article, \
@@ -222,22 +223,27 @@ front_add_article(front_or_cms='front')
 
 # 编辑文章
 @front_login_required
-front_edit_article(article_id, front_or_cms='front')
+front_edit_article(front_or_cms='front')
 
 
 # 删除文章，和后端不同，前台只删除，但不真正删除
 @front_login_required
-def front_delete_article(request, article_id):
-    article_model = ArticleModel.objects.filter(article_id=article_id).first()
-    if article_model:
-        article_model.is_removed = True
-        article_model.save()
-        return redirect(reverse('article_list'))
+def front_delete_article(request):
+    article_id = request.GET.get('article_id', None):
+    if article_id:
+        article_model = ArticleModel.objects.filter(article_id=article_id).first()
+        if article_model:
+            article_model.is_removed = True
+            article_model.save()
+            return redirect(reverse('article_list'))
+        else:
+            return myjson.json_params_error(u'该文章不存在！')
     else:
-        return myjson.json_params_error(u'该文章不存在！')
+        return myjson.json_params_error(u'没有该id！')
 
 
 # 文章点赞
+@front_login_required
 @require_http_methods(['POST'])
 def front_article_star(request):
     '''点赞和取消点赞，同置顶
@@ -256,13 +262,12 @@ def front_article_star(request):
         article_model = ArticleModel.objects.filter(pk=article_id).first()
         star_model = ArticleStarModel.objects.filter(pk=article_id).first()
         if article_model:
-            star_model = article_model.star
             if is_star:
                 if star_model:
                     return myjson.json_params_error(message=u'该文章已经置顶！')
                 else:
                     star_model = ArticleStarModel()
-                    star_model.author = request.user
+                    star_model.author = request.user.username
                     star_model.article = article_model
                     star_model.save()
                     return myjson.json_result()
@@ -281,30 +286,87 @@ def front_comment_list(request, page=1):
     return render(request, 'front_comment_list.html',context)
 
 # 增加评论
+@front_login_required
 def front_add_comment(request):
     if request.method == 'GET':
-        return render(request,'front_add_article.html')
+        article_id = request.GET.get('article_id')
+        context = {
+            'articles':ArticleModel.objects.filter('article_id').first()
+        }
+        return render(request,'front_add_article.html',context)
     else:
         form = AddArticleForm(request.POST)
         if form.is_valid():
-            pass
+            article_id = form.cleaned_data.get('article_id')
+            comment = form.cleaned_data.get('comment')
+            comment_model = CommentModel(comment=comment)
+            article_model = ArticleModel.objects.filter('article_id').first()
+            comment_model.article = article_model
+            comment_model.author = request.user.username
+            comment_model.save()
+            return myjson.json_result()
         else:
             return render(request,'front_add_article.html',{'errors':form.error})
 
 # 删除评论
+@front_login_required
+@require_http_methods(['POST'])
 def front_delete_comment(request):
-    pass
+    comment_id = request.GET.get('comment_id', None)
+    if comment_id:
+        comment_model = CommentModel.objects.filter(pk=comment_id).first()
+        if comment_model:
+            comment_model.is_removed = True
+            comment_model.save()
+            return myjson.json_result()
+        else:
+            return myjson.json_params_error(message=u'该评论不存在！')
+    else:
+        return myjson.json_params_error(u'没有该id！')
 
 # 回复评论
+@front_login_required
 def front_reply_comment(request):
+    '''回复评论需要：文章id，被回复的评论id（即原始评论），回复内容
+    '''
     if request.method == 'GET':
-        return render(request,'front_add_article.html')
+        article_id = request.GET.get('article_id', None)
+        comment_id = request.GET.get('comment_id', None)
+        if article_id:
+            article_model = ArticleModel.objects.filter(pk=article_id).first()
+            if article_model:
+                context = {
+                    'articles':article_model
+                }
+                if comment_id:
+                    # 原始评论
+                    origin_comment = CommentModel.objects.filter(pk=comment_id).first()
+                    if origin_comment:
+                        context['origin_comment'] = origin_comment
+        return render(request,'front_add_article.html', context)
     else:
-        form = AddArticleForm(request.POST)
+        form = ReplyCommentForm(request.POST)
         if form.is_valid():
-            pass
+            article_id = form.cleaned_data.get('article_id',None)
+            comment_id = form.cleaned_data.get('comment_id',None)
+            content = form.cleaned_data.get('content',None)
+            if article_id：
+                article_model = ArticleModel.objects.filter(article_id).first()
+                if content:
+                    comment_model = CommentModel(content=content)
+                    comment_model.article = article_model
+                    comment_model.author = request.user.username
+                    if comment_id:
+                        origin_comment = CommentModel.objects.filter(pk=comment_id).first()
+                        comment_model.origin_comment = origin_comment
+                        comment_model.save()
+                    return myjson.json_result()
+                else:
+                    return myjson.json_params_error(u'没有评论内容！')
+            else:
+                return myjson.json_params_error(u'没有该评论！')
         else:
-            return render(request,'front_add_article.html',{'errors':form.error})
+            return myjson.json_params_error(message=form.errors)
 
 # 查找
 def front_search(request):

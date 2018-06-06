@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.conf import settings
-from myblog.models import ArticleModel, TopArticleModel, CommentModel, PostStarModel, \
-                        BoardModel, CategoryModel, TagModel
+from myblog.models import ArticleModel, TopModel, CommentModel, \
+                        CategoryModel, TagModel, ArticleStarModel
 
 class ArticleModelHelper(object):
 
@@ -60,6 +60,8 @@ class ArticleModelHelper(object):
             'c_page': page,
             't_page': total_page
         }
+        return context
+
 
     @classmethod
     def article_list(cls, page, sort, category_id):
@@ -96,7 +98,7 @@ class ArticleModelHelper(object):
 
         context.update({
             'c_sort': sort,
-            'c_category': category_id
+            'c_category': category_id,
             'category': CategoryModel.objects.all()
         })
         return context

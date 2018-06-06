@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'django.contrib.sites',
+    # 'django_comments',
     'myblog',
     'page_api.cms',
     'page_api.front',
@@ -155,12 +157,14 @@ LOGIN_URL = '/cms/login/'
 # 每页显示多少条数据
 PAGE_NUM = 10
 
+# SITE_ID = 1
+
 # # email config
-# EMAIL_HOST_PASSWORD = 'kswaqavhlfmldjdh'
-# EMAIL_HOST_USER = 'xxx@qq.com'
-# EMAIL_HOST = 'smtp.qq.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = 'kswaqavhlfmldjdh'
+EMAIL_HOST_USER = 'xxx@qq.com'
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 
 # USER_SESSION_ID = 'hhh'
@@ -168,11 +172,11 @@ PAGE_NUM = 10
 # FRONT_SESSION_ID = 'DJDJFD'
 
 # # 阿里大于
-# APP_KEY = 'xxx'
-# APP_SECRET = 'xxx'
-# SIGN_NAME = 'xxx'
-# TEMPLATE_CODE = 'SMS_xxxx'
+APP_KEY = 'xxx'
+APP_SECRET = 'xxx'
+SIGN_NAME = 'xxx'
+TEMPLATE_CODE = 'SMS_xxxx'
 
 # # 七牛
-# QINIU_ACCESS_KEY = 'xxx'
-# QINIU_SECRET_KEY = 'xxxx'
+QINIU_ACCESS_KEY = 'xxx'
+QINIU_SECRET_KEY = 'xxxx'

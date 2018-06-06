@@ -6,7 +6,8 @@ from myblog import views
 
 urlpatterns = [
     url(r'', include('page_api.front.urls')),
-    # url(r'^front/', include('page_api.front.urls')),
+    url(r'^front/', include('page_api.front.urls')),
     url(r'^cms/', include('page_api.cms.urls')),
     url(r'^common/', include('page_api.common.urls')), 
+    url(r'^comments/', include('django_comments..urls')), 
 ]

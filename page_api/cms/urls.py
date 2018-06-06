@@ -23,6 +23,4 @@ urlpatterns = [
     # url(r'^edit_category/$',views.edit_category,name='cms_edit_category'),
     # url(r'^category_manage/$',views.category_manage,name='cms_category_manage'),
     # url(r'^add_tag/$',views.add_tag,name='cms_add_tag'),
-    # url(r'^email_success/$',views.email_success,name='cms_email_success'),
-    # url(r'^email_fail/$',views.email_fail,name='cms_email_fail'),
 ]

@@ -44,11 +44,7 @@
 					</div>
 					<div class="panel-body">
 						<p>
-							{% if article.desc %}
-								{{article.desc}}
-							{% else %}
-								{{article.content_html|truncatechars_html:100|striptags}}
-							{% endif %}
+							{{article.content|truncatechars_html:100|striptags}}
 						</p>
 						<div class="article-info">
 							<span>阅读：{{article.read_count}}</span>&nbsp;&nbsp;|&nbsp;&nbsp;

@@ -1,5 +1,6 @@
 {% extends "cms_base_list.html" %}
 {% load static %}
+{% load my_tags %}
 
 {% block titleblock %}
 {% endblock titleblock %}
@@ -75,9 +76,9 @@
                         <li class="disabled"><span>&lt;</span></li>
                     {% elif c_page <= 5 %}
                         <li class="disabled"><span>&laquo;</span></li>
-                        <li><a href="{% url 'cms_article_list' page=c_page-5 category_id=c_category sort=c_sort,board=c_board  %}"> &lt;</a></li>
+                        <li><a href="{% url 'cms_article_list' page=c_page-5 category_id=c_category sort=c_sort  %}"> &lt;</a></li>
                     {% else %}
-                    	<li><a href="{% url 'cms_article_list' page=c_page-1 category_id=c_category sort=c_sort,board=c_board  %}">&laquo;</a></li>
+                    	<li><a href="{% url 'cms_article_list' page=c_page-1 category_id=c_category sort=c_sort  %}">&laquo;</a></li>
                     	<li><a href="{% url 'cms_article_list' page=c_page-5 category_id=c_category sort=c_sort,board=c_board  %}">&laquo;</a></li>
                     {% endif %}
 
@@ -85,24 +86,24 @@
                         {% if c_page == page %}
                             <li class="active"><span>{{ page }}</span></li>
                         {% else %}
-                        	<li><a href="{% url 'cms_article_list' page=page category_id=c_category sort=c_sort,board=c_board  %}">{{ page }}</a></li>
+                        	<li><a href="{% url 'cms_article_list' page=page category_id=c_category sort=c_sort  %}">{{ page }}</a></li>
                         {% endif %}
                     {% endfor %}
 
-                    <li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort board=c_board  %}">……</a></li>
-                    <li><a href="{% url 'cms_article_list' page=t_page+1 category_id=c_category sort=c_sort board=c_board  %}">{{ t_page }}</a></li>
+                    <li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort %}">……</a></li>
+                    <li><a href="{% url 'cms_article_list' page=t_page+1 category_id=c_category sort=c_sort %}">{{ t_page }}</a></li>
                     <li><span>共{{ t_page }}页</span></li>
 
                     {% if c_page >= t_page %}
                         <li class="disabled"><span>&gt;</span></li>
                         <li class="disabled"><span>&raquo;</span></li>
                     {% elif c_page >= t_page-5 %}
-                    	<li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort board=c_board  %}">&gt;</a></li>
+                    	<li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort %}">&gt;</a></li>
                         <li class="disabled"><span>&raquo;</span></li>
                     {% else %}
-                    	<li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort board=c_board  %}">……</a>
+                    	<li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort %}">……</a>
                     	</li>
-                    	<li><a href="{% url 'cms_article_list' page=t_page+5 category_id=c_category sort=c_sort board=c_board  %}">{{ t_page }}</a></li>
+                    	<li><a href="{% url 'cms_article_list' page=t_page+5 category_id=c_category sort=c_sort  %}">{{ t_page }}</a></li>
                     {% endif %}
                 </ul>
             </nav>

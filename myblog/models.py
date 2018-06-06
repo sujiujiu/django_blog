@@ -50,9 +50,9 @@ class CommentModel(models.Model):
     create_time = models.DateTimeField(auto_now=True)
     is_removed = models.BooleanField(default=False)
 
-    author = models.ForeignKey(User, null=True)
-    article = models.ForeignKey('ArticleModel')
-    reply = models.ForeignKey('CommentModel', related_name='reply', null=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    article = models.ForeignKey('ArticleModel', on_delete=models.CASCADE)
+    reply = models.ForeignKey('CommentModel', related_name='reply', on_delete=models.CASCADE, null=True, blank=True)
 
 
 # 点赞

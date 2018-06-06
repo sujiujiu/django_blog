@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django import forms
 from django.core.validators import RegexValidator
 from django.core.cache import cache
@@ -36,17 +38,10 @@ class FrontRegistForm(forms.Form):
 class ForgetpwdForm(BaseForm,CaptchaForm):
 	email = forms.EmailField()
 
-class ResetEmailForm(BaseForm):
+class ResetEmailForm(BaseForm,CaptchaForm):
 	email = forms.EmailField(required=True)
 	captcha = forms.CharField(max_length=4,min_length=4,required=True)
 
-	def clean(self):
-		email = self.cleaned_data.get('email')
-        captcha = self.cleaned_data.get('captcha')
-        captcha_cache = cache.get(email)
-        if not captcha_cache or captcha_cache.lower()!= captcha:
-            raise ValidationError(message=u'验证码错误！')
-        return True
 
 class ResetpwdForm(BaseForm):
 	oldpwd = forms.CharField(max_length=20, min_length=6)
@@ -61,15 +56,15 @@ class ResetpwdForm(BaseForm):
 		return self.cleaned_data
 
 
-class CommentForm(BaseForm):
+class AddCommentForm(BaseForm):
 	content = forms.CharField(max_length=200)
 	article_id = forms.CharField()
 
 
 class ReplyCommentForm(BaseForm):
-    post_id = forms.IntegerField(required=True)
+    article_id = forms.IntegerField(required=True)
     content = forms.CharField(max_length=200,min_length=1,required=True)
-    comment_id = IntegerField()
+    comment_id = forms.IntegerField()
 
 
 class AddArticleForm(BaseForm):
@@ -91,5 +86,5 @@ class SettingsForm(BaseForm):
 
 class ArticleStarForm(BaseForm):
 	article_id = forms.UUIDField(error_messages={'required':u'必须输入文章id'})
-	is_star = forms.BooleanField(required=True,default=False)
+	is_star = forms.BooleanField(required=True)
 

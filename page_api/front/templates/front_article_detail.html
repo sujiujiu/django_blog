@@ -2,10 +2,10 @@
 {% load static %}
 {% load comments %}
 
-{% block headblock %}
+{% block head %}
 	{{block.super}}
 	<link rel="stylesheet" href="{% static 'css/front_article_detail.css' %}">
-{% endblock headblock %}
+{% endblock head %}
 
 {% block main_content %}
 	<h2 class="page-header article-title" data-category-id="{{c_category.id}}">

@@ -1,14 +1,17 @@
 {% extends "cms_base.html" %}
 {% load static %}
-{% block titleblock %}修改邮箱{% endblock titleblock %}
 
-{% block baseheadblock %}
+{% block title %}
+修改邮箱
+{% endblock %}
+
+{% block basehead %}
 	<link rel="stylesheet" href="{% static 'css/cms_email.css' %}">
-{% endblock baseheadblock %}
+{% endblock %}
 
-{% block pageboxblock %}
+{% block pagebox %}
 	<div class="content-box">
-		<h1>修改密码</h1>
+		<h1>修改邮箱</h1>
 		<div class="container">
 			<form action="" class="form-horizontal" role='form' method="POST">
 				<div class="form-group">
@@ -29,4 +32,4 @@
 			</form>
 		</div>
 	</div>
-{% endblock pageboxblock %}
+{% endblock %}

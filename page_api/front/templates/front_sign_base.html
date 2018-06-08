@@ -1,11 +1,11 @@
 {% extends "common_base.html" %}
 {% load static %}
 
-{% block headblock %}
+{% block head %}
 	<link rel="stylesheet" href="{% static 'css/front_sign_base.css' %}">
-{% endblock headblock %}
+{% endblock head %}
 
-{% block bodyblock %}
+{% block body %}
 	<div class="container">
 		<div class="logo-box">
 			<img src="{% static 'images/logo.png' %}" alt="">
@@ -22,4 +22,4 @@
 			{% block formblock %}{% endblock formblock %}
 		</form>
 	</div>
-{% endblock bodyblock %}
+{% endblock body %}

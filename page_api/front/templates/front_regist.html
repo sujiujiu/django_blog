@@ -1,11 +1,11 @@
 {% extends "front_sign_base.html" %}
 {% load static %}
 
-{% block headblock %}
+{% block head %}
 	{{block.super}}
 	<link rel="stylesheet" href='{% static "css/front_regist.css" %}'>
 	<script src='{% static "js/front_captcha.js" %}'></script>
-{% endblock headblock %}
+{% endblock head %}
 
 {% block formblock %}
 	<div class="form-group">

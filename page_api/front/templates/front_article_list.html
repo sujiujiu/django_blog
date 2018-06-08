@@ -1,14 +1,14 @@
 {% extends "front_base.html" %}
 {% load static %}
 
-{% block headblock %}
+{% block head %}
 	{{block.super}}
 	<link rel="stylesheet" href='{% static "css/front_article_list.css" %}'>
 	<script src='{% static "js/front_article_list.js" %}'></script>
 	<script src='{% static "js/arttemplate.js" %}'></script>
 	<script src='{% static "js/mytemplate.js" %}'></script>
 	{% include "front_articlelist_tpl.html" %}
-{% endblock headblock %}
+{% endblock head %}
 
 {% block main_content %}
 	<div class="row">

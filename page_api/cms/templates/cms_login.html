@@ -1,38 +1,49 @@
-{% extends "common_base.html" %}
 {% load static %}
-{% block titleblock %}
-	CMS登录
-{% endblock titleblock %}
 
-{% block head %}
-	  <link rel="stylesheet" href="{% static 'css/cms_login.css' %}">
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>登录</title>
+        {% include 'common/common_head.html' %}
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]><![endif]-->
+          <script src="https://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+          {# <link rel="stylesheet" href="{% static 'css/cms_login.css' %}"> #}
     <script src='{% static "js/cms_login.js" %}'></script>
-{% endblock head %}
+  </head>
 
-{% block body %}
-	<div class="container">
-  		<form class="form-signin" role="form" method='POST'>
-  			{%csrf_token%}
-    		<h2 class="form-signin-heading">请登录</h2>
-    		<input type="text" class="form-control" placeholder="用户名" name="username" required autofocus>
-    		<input type="password" class="form-control" placeholder="密码" name="password" required>
-        {% comment %}
-          <div class="input-group">
-            <input type="text" class="form-control" required placeholder="验证码" name="captcha">
-            <span class="input-group-addon">
-              <img src="{% url 'common_captcha' %}" alt="点击刷新验证码" class="captcha-img">
-            </span>
-          </div> 
-        {% endcomment %}
-        <p class="text-danger error-p">{{error}}</p>
-        
-          <div class="checkbox">
-            <label>
-            <input type="checkbox" value="remember-me" name='remember'> 记住我
-            </label>
-          </div> 
-        
-    		<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
-  		</form>	
-	</div>
-{% endblock body %}
+  <body>
+    <div class="container col-md-offset-4 col-sm-offset-3 col-md-4 col-sm-6 form-group-lg">
+        <form class="form-horizontal" method="post" action="">
+            {%csrf_token%}
+            <h2 class="form-signin-heading">请登录</h2>
+            <div class="form-group">
+                <label for="inputEmail" class="col-sm-2 control-label sr-only">邮箱</label>
+                <input type="email" class="form-control" id="inputEmail" name="email" placeholder="邮箱" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" class="col-sm-2 control-label sr-only">密码</label>
+                <input type="password" class="form-control" id="inputPassword"  name="password" placeholder="不少于6位" required autofocus>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="1" name="remember"> 记住我
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit">登录</button>
+            </div>
+            {% if message %}
+                <div class="form-group">
+                    <p class="text-danger error-info">{{error}}</p>
+                </div>
+            {% endif %}
+            <input type=hidden value="{{ next or '' }}" name=next>
+        </form>
+    </div>
+
+  </body>
+</html>

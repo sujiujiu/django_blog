@@ -26,7 +26,7 @@ $(function() {
 		var categoryInput = $("#category-input");
 		var categoryName = categoryInput.val();
 		// 2. 提交到服务器
-		xtajax.post({
+		myajax.post({
 			'url': '/cms/add_category/',
 			'data':{'categoryname':categoryName},
 			'success':function(result) {				
@@ -76,7 +76,7 @@ $(function() {
 		var tagElement = $("#tag-input");
 		var tagname = tagElement.val();
 		//提交到服务器
-		xtajax.post({
+		myajax.post({
 			'url': '/cms/add_tag/',
 			'data':{'tagname':tagname},
 			'success':function(result) {				
@@ -104,7 +104,7 @@ $(function() {
 // 上传图片执行函数
 $(function() {
 	//把一些固定的参数封装进函数,把那些需要更改的参数不进行封装
-	var uploader = xtqiniu.setUp({
+	var uploader = myqiniu.setUp({
 		'browse_button':'thumbnail-btn',
 		'success':function(up,file,info) {
 				// 把图片的URL设置input里面
@@ -139,19 +139,19 @@ $(function() {
 				tags.push(tagId);
 			}
 		});
-		var content_html = editor.getValue();
+		var content = editor.getValue();
 		var data = {
 			'title': title,
 			'category': category,
 			'desc': desc,
 			'thumbnail': thumbnail,
 			'tags[]': tags,
-			'content_html': content_html,
+			'content': content,
 			'uid': titleElement.attr('data-article-id')
 		};
 		
 		// 通过ajax发布到服务器
-		xtajax.post({
+		myajax.post({
 			'url': window.location.href,
 			'data': data,
 			'success':function(result) {

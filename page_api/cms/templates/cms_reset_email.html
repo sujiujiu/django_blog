@@ -2,34 +2,33 @@
 {% load static %}
 
 {% block title %}
-修改邮箱
+	修改邮箱
 {% endblock %}
 
-{% block basehead %}
-	<link rel="stylesheet" href="{% static 'css/cms_email.css' %}">
+{% block head %}
+	<script src="{% static 'js/cms_reset_email.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/cms_reset_email.css' %}">
 {% endblock %}
 
-{% block pagebox %}
-	<div class="content-box">
-		<h1>修改邮箱</h1>
-		<div class="container">
-			<form action="" class="form-horizontal" role='form' method="POST">
-				<div class="form-group">
-					<label for="" class="col-md-3 col-sm-3 control-label">邮箱:</label>
-					<div class="col-md-9 col-sm-9">
-						<input type="email" class="form-control" required placeholder="{{user.email}}" name="email">
-						<span class="input-group-addon" id="captcha-btn" style="cursor: pointer;">
-                    获取验证码
-					</div>
+{% block main_content %}
+	<div class="container  col-md-offset-4 col-sm-offset-2 col-lg-4 col-md-4 form-group-lg">
+		<form action="" class="form-horizontal" role='form' method="POST">
+			{% csrf_token %}
+			<div class="form-group">
+				<label for="" class="col-md-3 col-sm-3 control-label">邮箱:</label>
+				<div class="col-md-9 col-sm-9">
+					<input type="email" class="form-control" required placeholder="{{user.email}}" name="email">
+					<span class="input-group-addon" id="captcha-btn" style="cursor: pointer;">
+                获取验证码
 				</div>
-				<p class="text text-danger">{{error}}</p>
-				<div class="form-group">
-		            <input type="text" class="form-control" name="captcha" placeholder="邮箱验证码">
-		        </div>
-		        <div class="form-group">
-		            <button class="btn btn-primary" id="submit">立即修改</button>
-		        </div>
-			</form>
-		</div>
+			</div>
+			<p class="text text-danger">{{error}}</p>
+			<div class="form-group">
+	            <input type="text" class="form-control" name="captcha" placeholder="邮箱验证码">
+	        </div>
+	        <div class="form-group">
+	            <button class="btn btn-primary" id="submit">立即修改</button>
+	        </div>
+		</form>
 	</div>
 {% endblock %}

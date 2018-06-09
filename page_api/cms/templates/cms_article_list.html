@@ -1,23 +1,39 @@
-{% extends "cms_base_list.html" %}
+{% extends "cms_base.html" %}
 {% load static %}
 {% load my_tags %}
 
-{% block titleblock %}
-{% endblock titleblock %}
+{% block title %}
+	文章管理
+{% endblock %}
 
-{% block baseheadblock %}
+{% block page_title %}
+	{{ self.title() }}
+{% endblock %}
+
+{% block head %}
 	{{block.super}}
 	<link rel="stylesheet" href='{% static "css/cms_article_list.css" %}'>
 	<script src="{% static 'js/cms_article_list.js' %}"></script>
+	<script src="{% static 'common/js/myparam.js' %}"></script>
 	<script src='{% static "js/arttemplate.js" %}'></script>
-{% endblock baseheadblock %}
+{% endblock %}
 
 {% block main_content %}
-	<div class="row">
-		<div class="input-group col-md-8 col-sm-8">
-			<span class="input-group-addon">按分类</span>
-			<select name="" id="category-select" class="form-control">
-				<option value="0">全部</option>
+	<div class="top-box">
+		<div class="sort-group">
+            <label>排序：</label>
+            <select class="sort-select" id="sort-select">
+                <option value="1" {% if c_sort == 1 %}selected{% endif %}>按时间排序</option>
+                <option value="2" {% if c_sort == 2 %}selected{% endif %}>按加精排序</option>
+                <option value="3" {% if c_sort == 3 %}selected{% endif %}>按评论量排序</option>
+            </select>
+        </div>
+
+		<div class="category-filter-group">
+			<label>根据分类：</label>
+			<select name="sort-select" id="category-select" class="form-control">
+				<option value="0" {% if c_category==0 %}selected{% endif %}>所有分类</option>
+
 				{% for category in categorys %}
 					<option value="{{category.id}}" {% if category.id == c_category %}
 						selected="selected" 
@@ -55,12 +71,13 @@
 							<a href="{% url 'cms_edit_article' pk=article.article_id %}">编辑</a> |
 							<a href="#" class="top-article-btn">
 								{% if article.top %}
-									取消置顶
+									<button class="btn btn-info btn-xs hightlight-btn" data-post-id="{{ post.id }}" data-is-top="1">取消置顶</button>
+									
 								{% else %}
-									置顶
+									<button class="btn btn-primary btn-xs hightlight-btn" data-post-id="{{ post.id }}" data-is-top="0">置顶</button>
 								{% endif %}
 							</a> |
-							<a href="#" class="delete-article-btn" data-post-id="{{ article.article_id }}">删除</a>
+							<a href="#" class="remove-btn delete-article-btn" data-post-id="{{ article.article_id }}">删除</a>
 						</td>
 					</tr>
 				{% endfor %}

@@ -2,42 +2,49 @@
 {% load static %}
 
 {% block title %}
-修改密码
+	修改密码
 {% endblock %}
 
-{% block basehead %}
-	<link rel="stylesheet" href="{% static 'css/cms_email.css' %}">
+{% block page_title %}
+    {{ self.title() }}
 {% endblock %}
 
-{% block pagebox %}
-	<div class="content-box">
-		<h1>修改密码</h1>
-		<div class="container">
-			<form action="" method="POST" class="form form-horizontal" role='form'>
-		        <div class="form-group">
-		            <div class="input-group">
-		                <span class="input-group-addon">原密码</span>
-		                <input type="password" name="oldpwd" placeholder="请输入原始密码" class="form-control">
-		            </div>
-		        </div>
-		        <div class="form-group">
-		            <div class="input-group">
-		                <span class="input-group-addon">新密码</span>
-		                <input type="password" name="newpwd" placeholder="请输入新密码" class="form-control">
-		            </div>
-		        </div>
-		        <div class="form-group">
-		            <div class="input-group">
-		                <span class="input-group-addon">确认新密码</span>
-		                <input type="password" name="newpwd_repeat" placeholder="请确认新密码" class="form-control">
-		            </div>
-		        </div>
-		        <div class="form-group">
-		            <button class="btn btn-primary" id="submit" type="submit">
-		                立即保存
-		            </button>
-		        </div>
-		    </form>
-		</div>
+{% block head %}
+	<style>
+        .form{
+            width: 300px;
+        }
+    </style>
+	<script src="{% static 'js/cms_reset_pwd.js' %}"></script>
+{% endblock %}
+
+{% block main_content %}
+	<div class="container">
+		<form action="" method="POST" class="form form-horizontal" role='form'>
+			{% csrf_token %}
+	        <div class="form-group">
+	            <div class="input-group">
+	                <span class="input-group-addon">原密码</span>
+	                <input type="password" name="oldpwd" placeholder="请输入原始密码" class="form-control">
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <div class="input-group">
+	                <span class="input-group-addon">新密码</span>
+	                <input type="password" name="newpwd" placeholder="请输入新密码" class="form-control">
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <div class="input-group">
+	                <span class="input-group-addon">确认新密码</span>
+	                <input type="password" name="newpwd_repeat" placeholder="请确认新密码" class="form-control">
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <button class="btn btn-primary" id="submit" type="submit">
+	                立即保存
+	            </button>
+	        </div>
+	    </form>
 	</div>
 {% endblock %}

@@ -7,11 +7,12 @@
 $(function() {
 	// 初始化七牛的代码必须放在选择图片行为之前
 	myqiniu.setUp({
-		'browse_button': 'pickfiles',
+		'browse_button': 'avatar-img',
 		'success':function(up,file,info) {
-			var avatar = domain + file.name; //设置图片的完成URL路径
+			var avatar = $('#avatar-img'); 
+			// var avatar = domain + file.name; //设置图片的完成URL路径
 			// 把图片的URL设置进img标签
-			$('#pickfiles').attr('src',avatar)
+			$('#avatar-img').attr('src',avatar)
 		},
 		'error':function(up,err,errTip) {
 			console.log(err);
@@ -27,14 +28,14 @@ $('.submit-btn').click(function(event) {
 	// 说明有图片上传了
 	if(uploader.files.length > 0){
 		// src属性代表的就是上传的头像URL
-		avatar = $('#pickfiles').attr('src');
+		avatar = $('#avatar-img').attr('src');
 	}
 	var data = {'username':username};
 	if(avatar){
 		data['avatar'] = avatar;
 	}
 	$.ajax({
-		'url': '/cms/update_profile/',
+		'url': '/cms_settings/',
 		'method': 'post',
 		'data':data,
 		'success': function(data) {
@@ -54,7 +55,7 @@ $('.submit-btn').click(function(event) {
 		}
 	});
 	myajax.post({
-		'url': '/cms/update_profile/',
+		'url': '/cms_profile/',
 		'data':data,
 		'success': function(data) {
 			if(data['code'] == 200){

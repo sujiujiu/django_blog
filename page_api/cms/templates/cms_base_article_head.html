@@ -1,0 +1,16 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/cms_add_article.css' %}">
+<link rel="stylesheet" href="{% static 'simditor/styles/simditor.css' %}">
+<script src="{% static 'simditor/scripts/module.min.js' %}"></script>
+<script src="{% static 'simditor/scripts/hotkeys.min.js' %}"></script>
+<script src="{% static 'simditor/scripts/uploader.min.js' %}"></script>
+<script src="{% static 'simditor/scripts/simditor.min.js' %}"></script>
+<script src="https://cdn.bootcss.com/plupload/3.1.2/moxie.js"></script>
+<script src="https://cdn.bootcss.com/plupload/3.1.2/plupload.dev.js"></script>
+<script src="https://cdn.bootcss.com/qiniu-js/1.0.17-beta/qiniu.js"></script>
+<script src="{% static 'js/arttemplate.js' %}"></script>
+<script src="{% static "js/myqiniu.js" %}"></script>
+<script src='{% static "js/cms_base_article.js" %}'></script>
+{% include "cms_tag_template.html" %}
+

@@ -1,6 +1,4 @@
-/**
- * Created by Administrator on 2017/4/5.
- */
+// 移除评论
 $(function () {
     $('.remove-btn').click(function (event) {
         event.preventDefault();

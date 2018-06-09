@@ -1,6 +1,3 @@
-/**
- * Created by Administrator on 2017/3/16.
- */
 
 $(function () {
    $('#captcha-btn').click(function (event) {
@@ -8,16 +5,16 @@ $(function () {
 
        var email = $('input[name=email]').val();
 
-       xtajax.get({
+       myajax.get({
            'url': '/mail_captcha/',
            'data': {
                'email': email
            },
            'success': function (data) {
                if(data['code'] == 200){
-                   xtalert.alertSuccessToast('恭喜！邮箱发送成功！');
+                   myalert.alertSuccessToast('恭喜！邮箱发送成功！');
                }else{
-                   xtalert.alertInfoToast(data['message']);
+                   myalert.alertInfoToast(data['message']);
                }
            }
        })
@@ -34,7 +31,7 @@ $(function () {
        var email = emailInput.val();
        var captcha = captchaInput.val();
 
-       xtajax.post({
+       myajax.post({
            'url': '/resetmail/',
            'data':{
                'email': email,
@@ -44,9 +41,9 @@ $(function () {
                if(data['code'] == 200){
                    emailInput.val('');
                    captchaInput.val('');
-                   xtalert.alertSuccessToast('恭喜！邮箱修改成功！');
+                   myalert.alertSuccessToast('恭喜！邮箱修改成功！');
                }else{
-                   xtalert.alertInfoToast(data['message']);
+                   myalert.alertInfoToast(data['message']);
                }
            }
        })

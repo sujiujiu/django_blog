@@ -1,6 +1,4 @@
-/**
- * Created by Administrator on 2017/3/19.
- */
+
 $(function () {
     $('#submit').click(function (event) {
         event.preventDefault();
@@ -13,7 +11,7 @@ $(function () {
         var newpwd = newpwdInput.val();
         var newpwd_repeat = newpwdRepeatInput.val();
 
-        xtajax.post({
+        myajax.post({
             'url':'/resetpwd/',
             'data':{
                 'oldpwd':oldpwd,
@@ -25,9 +23,9 @@ $(function () {
                     oldpwdInput.val('');
                     newpwdInput.val('');
                     newpwdRepeatInput.val('');
-                    xtalert.alertSuccessToast('恭喜您！密码修改成功！');
+                    myalert.alertSuccessToast('恭喜您！密码修改成功！');
                 }else{
-                    xtalert.alertInfoToast(message);
+                    myalert.alertInfoToast(message);
                 }
             }
         });

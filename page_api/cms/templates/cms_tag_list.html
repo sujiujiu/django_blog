@@ -1,0 +1,49 @@
+{% extends "cms_base.html" %}
+{% load static %}
+
+{% block title %}
+    标签管理
+{% endblock %}
+
+{% block page_title %}
+    {{ self.title() }}
+{% endblock %}
+
+
+{% block head %}
+	{{block.super}}
+	<link rel="stylesheet" href="{% static 'css/cms_tag_list.css' %}">
+	<script src="{% static 'js/cms_tag_list.js' %}"></script>
+{% endblock %}
+
+{% block main_content %}
+    <div class="top-box">
+        <button class="btn btn-warning add-tag-btn" id="add-tag-btn">添加新标签</button>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <th>标签名称</th>
+            <th>创建者</th>
+            <th>创建时间</th>
+            <th>文章数量</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+            {% for tag in tags %}
+                <tr>
+                    <td>{{ tag.name }}</td>
+                    <td>{{ tag.author.username }}</td>
+                    <td>{{ tag.create_time }}</td>
+                    <td>{{ tag.articles.count() }}</td>
+                    <td>
+                        <button class="btn btn-primary btn-xs edit-tag-btn" data-tag-id="{{ tag.id }}">编辑</button>
+                        <button class="btn btn-danger btn-xs delete-tag-btn" data-tag-id="{{ tag.id }}">删除</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+
+

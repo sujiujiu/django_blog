@@ -1,20 +1,24 @@
 {% extends "cms_base.html" %}
 {% load static %}
 
-{% block titleblock %}
+{% block title %}
 	个人设置
-{% endblock titleblock %}
+{% endblock %}
 
-{% block baseheadblock %}
+{% block page_title %}
+	{{ self.title() }}
+{% endblock %}
+
+{% block head %}
 	<link rel="stylesheet" href="{% static 'css/cms_settings.css' %}">
 	<script src="{% static 'js/cms_settings.js' %}"></script>
 	<script src="https://cdn.bootcss.com/plupload/3.1.2/moxie.js"></script>
 	<script src="https://cdn.bootcss.com/plupload/3.1.2/plupload.dev.js"></script>
 	<script src="https://cdn.bootcss.com/qiniu-js/1.0.17-beta/qiniu.js"></script>
 	<script src="{% static "js/myqiniu.js" %}"></script>
-{% endblock baseheadblock %}
+{% endblock %}
 
-{% block pageboxblock %}
+{% block main_content %}
 	<div class="content-box">
 		<h1>个人设置</h1>
 		<div class="container">
@@ -39,9 +43,9 @@
 					<label for="" class="control-label col-md-3 col-sm-3">头像</label>
 					<div class="col-md-9 col-sm-9">
 						{% if not user.avatar %}
-							<img src="{% static 'images/default_avatar.jpg' %}" alt="" id='pickfiles'>
+							<img class="img-circle avatar-img" src="{% static 'images/default_avatar.jpg' %}" alt="" id="avatar-img">
 						{% else %}
-							<img src="{{user.avatar}}" alt=""  id='pickfiles'>
+							<img class="img-circle avatar-img" src="{{user.avatar}}" alt=""  id="avatar-img">
 						{% endif %}
 					</div>
 
@@ -55,4 +59,4 @@
 			</form>
 		</div>
 	</div>
-{% endblock pageboxblock %}
+{% endblock %}

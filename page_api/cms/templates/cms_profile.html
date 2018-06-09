@@ -4,16 +4,25 @@
     个人信息
 {% endblock %}
 
+{% block page_title %}
+    {{ self.title() }}
+{% endblock %}
+
+
 {% block main_content %}
     <table class="table table-bordered">
         <tbody>
             <tr>
                 <td>用户名：</td>
-                <td>{{ cms_user.username }}</td>
+                <td>{{ user.username }}</td>
             </tr>
             <tr>
                 <td>邮箱：</td>
-                <td>{{ cms_user.email }}</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td>头像：</td>
+                <td>{{ user.avatar }}</td>
             </tr>
         </tbody>
     </table>

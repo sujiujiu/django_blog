@@ -19,8 +19,8 @@ $(function () {
         var email = $('input[name=email]').val();
         var password = $('input[name=password]').val();
 
-        xtajax.post({
-            'url':'/login/',
+        myajax.post({
+            'url':'/cms_login/',
             'data':{
                 'email': email,
                 'password': password

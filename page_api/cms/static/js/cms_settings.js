@@ -55,7 +55,7 @@ $('.submit-btn').click(function(event) {
 		}
 	});
 	myajax.post({
-		'url': '/cms_profile/',
+		'url': '/cms_settings/',
 		'data':data,
 		'success': function(data) {
 			if(data['code'] == 200){

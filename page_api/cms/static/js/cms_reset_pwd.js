@@ -12,7 +12,7 @@ $(function () {
         var newpwd_repeat = newpwdRepeatInput.val();
 
         myajax.post({
-            'url':'/resetpwd/',
+            'url':'/cms_reset_pwd/',
             'data':{
                 'oldpwd':oldpwd,
                 'newpwd':newpwd,

@@ -27,7 +27,7 @@ $(function() {
 		var categoryName = categoryInput.val();
 		// 2. 提交到服务器
 		myajax.post({
-			'url': '/cms/add_category/',
+			'url': '/cms_add_category/',
 			'data':{'categoryname':categoryName},
 			'success':function(result) {				
 				if(result['code'] == 200){
@@ -77,7 +77,7 @@ $(function() {
 		var tagname = tagElement.val();
 		//提交到服务器
 		myajax.post({
-			'url': '/cms/add_tag/',
+			'url': '/cms_add_tag/',
 			'data':{'tagname':tagname},
 			'success':function(result) {				
 				if(result['code'] == 200){

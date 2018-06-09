@@ -32,7 +32,7 @@ $(function () {
        var captcha = captchaInput.val();
 
        myajax.post({
-           'url': '/resetmail/',
+           'url': '/cms_reset_mail/',
            'data':{
                'email': email,
                'captcha': captcha

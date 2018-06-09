@@ -9,7 +9,7 @@ $(function () {
             'confirmCallback': function (inputValue) {
                 // 发送ajax请求给后台
                 myajax.post({
-                    'url': '/add_tag/',
+                    'url': '/cms_add_tag/',
                     'data': {
                         'name': inputValue
                     },

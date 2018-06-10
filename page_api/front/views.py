@@ -16,7 +16,7 @@ from forms import FrontLoginForm,FrontRegistForm,ForgetpwdForm,\
         AddArticleForm,SettingsForm
 from frontauth.models import FrontUserModel
 
-from page_api.common.basemodel import ArticleModelHelper
+from page_api.common.basemodels import ArticleModelHelper
 # from common.basemodel import ArticleModelHelper
 from myblog.models import ArticleModel,CategoryModel,TagModel,TopModel,\
                 CommentModel,ArticleStarModel

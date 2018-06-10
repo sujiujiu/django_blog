@@ -7,15 +7,15 @@ from django.core.cache import cache
 from django.conf import settings
 from django.views.decorators.http import require_http_methods
 # from django.views import View
-from django.forms.models import model_to_dict
+# from django.forms.models import model_to_dict
 
-from frontauth.decorators import front_login_required
+# from frontauth.decorators import front_login_required
 
-from forms import ResetEmailForm,ResetpwdForm,\
-                AddCategoryForm,AddTagForm,AddArticleForm,EditArticleForm,\
-                CategoryForm,EditCategoryForm
-from myblog.models import ArticleModel,CategoryModel,TagModel,TopModel,\
-                CommentModel,ArticleStarModel
+# from forms import ResetEmailForm,ResetpwdForm,\
+#                 AddCategoryForm,AddTagForm,AddArticleForm,EditArticleForm,\
+#                 CategoryForm,EditCategoryForm
+# from myblog.models import ArticleModel,CategoryModel,TagModel,TopModel,\
+#                 CommentModel,ArticleStarModel
 
 
 from utils.captcha.mycaptcha import Captcha
@@ -25,15 +25,17 @@ import qiniu
 
 from PIL import Image
 try:
-	from cStringIO import StringIO
+    from cStringIO import StringIO
 except ImportError:
-	from io import BytesIO as StringIO
+    from io import BytesIO as StringIO
 
 # 图形验证码
 def graph_captcha(request):
-	text,image = Captcha.gene_code()
-	out = StringIO() 
-	# 将StringIO的指针指向开始的位置
+    text,image = Captcha.gene_code()
+    out = StringIO() 
+    #把图片保存到管道中
+    image.save(out,'png')
+    # 将StringIO的指针指向开始的位置
     out.seek(0)
     # 指定响应的类型
     response = HttpResponse(content_type='image/png')

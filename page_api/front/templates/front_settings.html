@@ -1,16 +1,16 @@
-{% extends "cms_base.html" %}
+{% extends "front_base.html" %}
 {% load static %}
 
-{% block titleblock %}
+{% block title %}
 个人信息设置
-{% endblock titleblock %}
+{% endblock %}
 
 {% block head %}
 	<link rel="stylesheet" href="{% static 'css/front_settings.css' %}">
 	<script src='{% static "js/front_settings.js" %}'></script>
 {% endblock head %}
 
-{% block container %}
+{% block main_content %}
     <div class="container-inner">
         <h2>个人信息</h2>
             <div class="form-group">
@@ -51,4 +51,4 @@
                 <button class="btn btn-primary" id="submit-btn" data-user-id="{{ front_user.id }}">保存</button>
             </div>
     </div>
-{% endblock  main_content %}
+{% endblock %}

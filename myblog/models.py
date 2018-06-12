@@ -28,6 +28,9 @@ class ArticleModel(models.Model):
     top = models.ForeignKey('TopModel',null=True,on_delete=models.SET_NULL)
     tags = models.ManyToManyField('TagModel', blank=True)
 
+    class Meta:
+        ordering=['-create_time']
+
 
 # 置顶
 class TopModel(models.Model):

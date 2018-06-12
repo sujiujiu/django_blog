@@ -210,7 +210,19 @@ def front_forget_pwd(request):
 
 # 文章列表
 def front_article_list(request,page=1,sort=1,category_id=0):
+    '''
+        通过ajax的方式加载页面，首页默认以置顶的方式，每次加载都先排除掉置顶的
+    '''
     context = ArticleModelHelper.article_list(page, sort, category_id)
+    articles = context['articles']
+    if category_id > 1:
+        top_article = articles.filter(top__isnull=False).order_by('-top__create_time')
+        articles = articles.filter(top__isnull=True)
+
+    if request.is_ajax():
+        return myjson.json_result(context)
+    else:
+        context['top_articles'] = top_article
     return render(request, 'front_article_list.html',context=context)
 
 # 文章详情页

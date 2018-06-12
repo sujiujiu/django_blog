@@ -4,10 +4,11 @@
 {% block head %}
 	{{block.super}}
 	<link rel="stylesheet" href='{% static "css/front_regist.css" %}'>
+	<script src='{% static "js/front_regist.js" %}'></script>
 	<script src='{% static "js/front_captcha.js" %}'></script>
 {% endblock head %}
 
-{% block formblock %}
+{% block sign_group %}
 	<div class="form-group">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="手机号码" name="telephone" value="{{ telephone }}">
@@ -20,4 +21,4 @@
 	<div class="form-group">
 		<button class="btn btn-success btn-block">注册</button>
 	</div>
-{% endblock formblock %}
+{% endblock %}

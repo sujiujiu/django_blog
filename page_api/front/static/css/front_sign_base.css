@@ -1,33 +1,65 @@
 
-.logo-box{
-	text-align: center;
-	margin-top: 100px;
-}
-
-.sign-box{
-	font-size: 20px;
-	text-align: center;
-	margin-top: 50px;
-	/*background: red;*/
-	height: 15px;
-	border-bottom: 1px solid #eee;
-}
-
-.sign-box a:hover{
-	text-decoration: none;
-}
-
-.sign-box .sign-box-inner{
-	background: #fff;
-	width: 200px;
-	margin: 0 auto;
-}
-
 .sign-form{
 	max-width: 300px;
 	margin: 50px auto;
 }
 
-.glyphicon{
+/*.glyphicon{
 	top: 0;
+}*/
+
+
+body{
+    background: #f3f3f3;
+}
+.outer-box{
+    background: #fff;
+    width: 854px;
+    margin: 0 auto;
+    overflow: hidden;
+    margin-top: 150px;
+    padding-bottom: 20px;
+}
+.logo-box{
+    width: 60px;
+    height:60px;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+	margin-top: 100px;
+}
+
+.logo-box a{
+    width: 60px;
+    height:60px;
+}
+.logo-box img{
+    width: 60px;
+    height:60px;
+    display: block;
+    margin: 0 auto;
+}
+.sign-group{
+    width: 300px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+.remember-me{
+    float: left;
+    margin-top: 0;
+}
+.forgetpwd{
+    float: right;
+}
+
+#send-captcha-btn{
+    cursor: pointer;
+}
+
+.captcha-addon{
+    padding: 0;
+}
+.captcha-img{
+    width: 80px;
+    height: 30px;
 }

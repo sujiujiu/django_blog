@@ -10,25 +10,23 @@ class ArticleModelHelper(object):
 
     class ArticleSortType(object):
         '''
-            sort_type：1 - 代表是按时间排序,
+            sort_type：1 - 代表是按时间排序,(默认)
             sort_type：2 - 代表是按置顶排序,
             sort_type：3 - 代表是按点赞量排序,
             sort_type：4 - 代表是按评论量排序,
         '''
         CREATE_TIME = 1
-        HIGHLIGH_TIME = 2
+        TOP_RANK = 2
         STAR_COUNT = 3
         COMMENT_COUNT = 4
 
     @classmethod
-    def common_page(cls, page, model_name, key_name):
+    def common_page(cls, total_articles, page, key_name):
         page_num = settings.PAGE_NUM
         start = (page - 1) * page_num
         end = start + page_num
 
-        articles = model_name.object.filter(is_removed=False)
-
-        total_articles = articles.count()
+        # total_articles = articles.count()
         total_page = total_articles / page_num
         if total_articles % page_num > 0:
             total_page += 1
@@ -62,15 +60,12 @@ class ArticleModelHelper(object):
         }
         return context
 
-
     @classmethod
-    def article_list(cls, page, sort, category_id):
+    def article_list(cls, sort, category_id):
         articleModel = ArticleModel.objects
         article_model = articleModel.all()
 
-        if sort == cls.ArticleSortType.CREATE_TIME:
-            articles = article_model.order_by('-create_time')
-        elif sort == cls.ArticleSortType.HIGHLIGH_TIME:
+        if sort == cls.ArticleSortType.TOP_RANK:
             articles = article_model.order_by(
                 '-top__create_time',
                 '-create_time')
@@ -86,19 +81,21 @@ class ArticleModelHelper(object):
                     '-comment_counts','-create_time'
                 )
         else:
-            articles = article_model.order_by('-create_time')
-        
+            articles = article_model
 
+        articles = model_name.object.filter(is_removed=False)
 
         # 如果分类选项不为0，就根据分类id选择，如果为0就是全部，不需要筛选
         if category_id:
             articles = articles.filter(category=category_id)
-        
-        context = cls.common_page(page=page,model_name=ArticleModel,key_name='articles')
 
+        total_articles = articles.count()
+
+        context = cls.common_page(page=page,total_articles=total_articles,key_name='articles')
+        
         context.update({
             'c_sort': sort,
             'c_category': category_id,
-            'category': CategoryModel.objects.all()
+            'categorys': CategoryModel.objects.all()
         })
         return context

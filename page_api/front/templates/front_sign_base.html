@@ -1,25 +1,25 @@
-{% extends "common_base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>{% block title %}{% endblock %}</title>
+	    {% include 'common/common_head.html' %}
+	    <link rel="stylesheet" href="{% static 'css/front_sign_base.css' %}">
+	    {% block head %}{% endblock %}
+	</head>
 
-{% block head %}
-	<link rel="stylesheet" href="{% static 'css/front_sign_base.css' %}">
-{% endblock head %}
-
-{% block body %}
-	<div class="container">
-		<div class="logo-box">
-			<img src="{% static 'images/logo.png' %}" alt="">
-		</div>
-		<div class="sign-box">
-			<div class="sign-box-inner">
-				<a href="{% url 'front_login' %}">登录</a>
-				<b>·</b>
-				<a href="{% url 'front_regist' %}">注册</a>
+	<body>
+		<div class="outer-box">
+			<div class="logo-box">
+				<a href="/"><img src="{% static 'images/logo.png' %}" alt=""></a>
+			</div>
+			<div class="sign-group">
+				<form action="" class="form sign-form" role='form' method='POST'>
+					{%csrf_token%}
+					{% block sign_group %}{% endblock %}
+				</form>
 			</div>
 		</div>
-		<form action="" class="form sign-form" role='form' method='POST'>
-			{%csrf_token%}
-			{% block formblock %}{% endblock formblock %}
-		</form>
-	</div>
-{% endblock body %}
+	</body>
+</html>

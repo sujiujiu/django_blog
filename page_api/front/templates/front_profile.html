@@ -1,0 +1,61 @@
+{% extends 'front/front_profile_base.html' %}
+
+{% block profile %}active{% endblock %}
+
+{% block right_content %}
+    <p class="info-title">个人资料</p>
+    <ul class="info-list">
+        <li>用户名：{{ front_user.username }}</li>
+        <li>
+            邮箱：
+            {% if not user_id or front_user.id != user_id %}
+                [隐藏]
+            {% else %}
+                {{ front_user.email or '未填写' }}
+            {% endif %}
+            {% if not user_id or front_user.id != user_id %}
+                [隐藏]
+            {% else %}
+                {{ front_user.email or '未填写' }}
+            {% endif %}
+        </li>
+        <li>
+            QQ：
+            {% if not user_id or front_user.id != user_id %}
+                [隐藏]
+            {% else %}
+                {{ front_user.qq or '未填写' }}
+            {% endif %}
+        </li>
+        <li>真实姓名：
+            {% if not user_id or front_user.id != user_id %}
+                [隐藏]
+            {% else %}
+                {{ front_user.realname or '未填写' }}
+            {% endif %}
+        </li>
+        <li>性别：
+            {{ front_user.gender or '保密' }}
+        </li>
+        <li>个性签名：{{ front_user.signature or '这个家伙很懒，没有留下什么~' }}</li>
+        <li>
+            博客积分：{{ front_user.points }}
+        </li>
+    </ul>
+    <br>
+    <p class="info-title">活跃概括</p>
+    <ul class="info-list">
+        <li>
+            发表文章数：{{ front_user.articles|length }}
+        </li>
+        <li>
+            评论数量：{{ front_user.comments.count() }}
+        </li>
+        <li>
+            上次登录时间：{{ front_user.last_login_time }}
+        </li>
+        <li>
+            入驻博客时间：{{ front_user.join_time }}
+        </li>
+    </ul>
+{% endblock %}

@@ -1,15 +1,24 @@
 {% extends "common_base.html" %}
 {% load static %}
 
+{% block title %}
+    找回密码
+{% endblock %}
+
+{% block page_title %}
+    {{ self.title() }}
+{% endblock %}
+
+
 {% block head %}
 	<link rel="stylesheet" href="{% static 'css/front_forget_pwd.css' %}">
 	<script src='{% static "js/front_captcha.js" %}'></script>
 {% endblock head %}
 
 {% block main_content %}
-	<h1>找回密码</h1>
 	<div class="container">
 		<form action="" class="form" role="form" method="POST">
+			{% csrf_token %}
 			<div class="form-group">
 				<input type="email" name='email' class="form-control" placeholder="邮箱">
 			</div>

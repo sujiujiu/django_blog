@@ -1,8 +1,8 @@
-{% extends 'front/front_profile_base.html' %}
+{% extends 'front_profile_base.html' %}
 
 {% block profile_head %}
-    {{ static('css','front/css/front_profile_articles.css') }}
-    {{ static('js','front/css/front_profile_articles.js') }}
+    <link rel="stylesheet" href='{% static "css/front_profile_articles.css" %}'>
+    <script src='{% static "js/front_profile_articles.js" %}'></script>
 {% endblock %}
 
 {% block articles %}
@@ -18,14 +18,14 @@
         <table class="table">
             <thead>
                 <th>标题：</th>
-                <th>板块</th>
+                <th>分类</th>
                 <th>回复/查看</th>
             </thead>
             <tbody>
                 {% for article in current_user.articles %}
                     <tr>
                         <td><a href="{% url 'front_profile_articles' article_id=article.id %}">{{ article.title }}</a></td>
-                        <td>{{ article.board.name }}</td>
+                        <td>{{ article.category.name }}</td>
                         <td>{{ article.comments|length }}/{{ article.read_count }}</td>
                     </tr>
                 {% endfor %}
@@ -36,10 +36,10 @@
         <table class="table">
             <thead>
                 <th>评论</th>
-                <th>板块</th>
+                <th>分类</th>
             </thead>
             <tbody>
-                {% for comment in current_user.comments %}
+                {% for comment in front_user.comments %}
                     <tr>
                         <td>
                             <p>

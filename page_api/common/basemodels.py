@@ -61,7 +61,8 @@ class ArticleModelHelper(object):
         return context
 
     @classmethod
-    def article_list(cls, sort, category_id):
+    def article_list(cls, sort, page, category_id):
+        sort,category_id,page = int(sort),int(category_id),int(page)
         articleModel = ArticleModel.objects
         article_model = articleModel.all()
 
@@ -83,7 +84,7 @@ class ArticleModelHelper(object):
         else:
             articles = article_model
 
-        articles = model_name.object.filter(is_removed=False)
+        articles = articles.object.filter(is_removed=False)
 
         # 如果分类选项不为0，就根据分类id选择，如果为0就是全部，不需要筛选
         if category_id:
@@ -91,7 +92,11 @@ class ArticleModelHelper(object):
 
         total_articles = articles.count()
 
-        context = cls.common_page(page=page,total_articles=total_articles,key_name='articles')
+        context = cls.common_page(
+            total_articles=total_articles,
+            page=page,
+            key_name='articles'
+        )
         
         context.update({
             'c_sort': sort,

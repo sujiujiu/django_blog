@@ -30,10 +30,10 @@ from utils import myjson
 
 # CMS用户管理
 
-@login_required
-def cms_index(request):
-    return cms_article_list(request,page=1,sort=1,category_id=0)
-    # return render(request, 'cms_index.html')
+# @login_required
+# def cms_index(request):
+#     return cms_article_list(request, page=1,sort=1,category_id=0)
+#     # return render(request, 'cms_index.html')
 
 # 如果使用的是类定义的view，不能使用@login_required
 def cms_login(request):
@@ -178,8 +178,11 @@ def cms_settings(request):
 
 # 文章列表
 @login_required
-def cms_article_list(request,page=1,sort=1,category_id=0):
-    context = ArticleModelHelper.article_list(page, sort, category_id)
+def cms_article_list(request):
+    sort = request.GET.get('sort',1)
+    page = request.GET.get('page',1)
+    category_id = request.GET.get('category_id',0)
+    context = ArticleModelHelper.article_list(sort, page, category_id)
     return render(request, 'cms_article_list.html',context=context)
 
 # 添加文章
@@ -495,3 +498,17 @@ def cms_remove_category(request):
     else:
         message = form.errors
         return myjson.json_params_error(message)
+
+
+def test(request):
+    # 1.创建一个后台账号
+    # create_user = User.objects.create(email='xx@qq.com',password='111')
+    # create_user.save()
+    # 2. 测试生成100篇文章
+    for i in xrange(0,100):
+        title = u'title' + str(i)
+        category = CategoryModel.objects.all().first()
+        content = u'blog_content_' + str(i)
+        article_model = ArticleModel(title=title,content=content,category=category)
+        article_model.save()
+    return myjson.json_result()

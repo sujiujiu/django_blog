@@ -1,6 +1,14 @@
 {% extends "front_base.html" %}
 {% load static %}
-{# {% load comments %} #}
+
+{% block title %}
+    文章列表
+{% endblock %}
+
+{% block page_title %}
+    {{ self.title() }}
+{% endblock %}
+
 
 {% block head %}
 	{{block.super}}
@@ -32,7 +40,7 @@
 			<li>
 				<div class="user-info">
 					<div class="user-left">
-						<a href="{{ url_for('account.profile',user_id=comment.author.id) }}">
+						<a href="{% url 'front_profile' user_id=comment.author.id %}">
 							<img class="user-head"  src="{{ comment.author.avatar }}" alt=""></a>
 					</div>
 					<div class="user-right">
@@ -47,7 +55,7 @@
 		{% endfor %}
 	</ul>
 	<div class="comment-box">
-		<form action="{% url 'front_comment' %}" method="POST">
+		<form action="{% url 'front_comment_list' %}" method="POST">
 			{% csrf_token %}
 			<textarea name="content" placeholder="请填写评论~" class="comment-textarea"></textarea>
 			<input type="hidden" name='article_id' value="{{article.article_id}}">

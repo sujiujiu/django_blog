@@ -5,6 +5,7 @@ from django.contrib import admin
 from myblog import views
 
 urlpatterns = [
+	url(r'^admin/', admin.site.urls),
     url(r'', include('page_api.front.urls')),
     url(r'^front/', include('page_api.front.urls')),
     url(r'^cms/', include('page_api.cms.urls')),

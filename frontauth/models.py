@@ -21,9 +21,9 @@ class FrontUserModel(models.Model):
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
     avatar = models.URLField(blank=True)
-    qq = models.CharField(max_length=20)
-    realname = models.CharField(max_length=20)
-    signature = models.CharField(max_length=100)
+    qq = models.CharField(max_length=20,null=True)
+    realname = models.CharField(max_length=20,null=True)
+    signature = models.CharField(max_length=100,null=True)
     gender = models.IntegerField(default=GenderType.SECRET)
 
     def __init__(self,*args,**kwargs):

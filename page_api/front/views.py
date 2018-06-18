@@ -114,6 +114,10 @@ def front_reset_email(request):
 def front_profile(request):
     return render(request, 'front_profile.html')
 
+# 该用户的所有发布的文章
+def front_profile_articles(request):
+    return render(request, 'front_profile_articles.html')
+
 
 # 设置
 @front_login_required

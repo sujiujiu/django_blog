@@ -8,7 +8,7 @@
 	{% for article in articles %}
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<a href="{% url 'front_article_detail' article_id=article.uid %}">{{article.title}}</a>
+				<a href="{% url 'front_article_detail' article_id=article.article_id %}">{{article.title}}</a>
 			</div>
 			<div class="panel-body">
 				{{article.content|truncatechars_html:100|striptags}}

@@ -4,7 +4,7 @@ import views
 
 
 urlpatterns = [
-    url(r'^$', views.cms_index, name="cms_index"),
+    url(r'^$', views.cms_article_list, name="cms_index"),
     url(r'^login/$', views.cms_login, name="cms_login"),
     url(r'^logout/$',views.cms_logout,name='cms_logout'),
     # url(r'^article_manage/(?P<page>\d+)/(?P<category_id>\d+)/$',views.article_manage,name='cms_article_manage'),
@@ -23,4 +23,5 @@ urlpatterns = [
     # url(r'^edit_category/$',views.edit_category,name='cms_edit_category'),
     # url(r'^category_manage/$',views.category_manage,name='cms_category_manage'),
     # url(r'^add_tag/$',views.add_tag,name='cms_add_tag'),
+    url(r'^test/$',views.test),
 ]

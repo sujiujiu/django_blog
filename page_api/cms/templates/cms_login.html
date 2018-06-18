@@ -4,13 +4,13 @@
     <head>
         <meta charset="utf-8">
         <title>登录</title>
-        {% include 'common/common_head.html' %}
+        {% include 'common_base.html' %}
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]><![endif]-->
-          <script src="https://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
-          <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-          {# <link rel="stylesheet" href="{% static 'css/cms_login.css' %}"> #}
-    <script src='{% static "js/cms_login.js" %}'></script>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <link rel="stylesheet" href="{% static 'css/cms_login.css' %}">
+        <script src='{% static "js/cms_login.js" %}'></script>
   </head>
 
   <body>
@@ -36,12 +36,12 @@
             <div class="form-group">
                 <button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit">登录</button>
             </div>
-            {% if message %}
+            {% if error %}
                 <div class="form-group">
                     <p class="text-danger error-info">{{error}}</p>
                 </div>
             {% endif %}
-            <input type=hidden value="{{ next or '' }}" name=next>
+            <input type=hidden value="{{ next }}" name=next>
         </form>
     </div>
 

@@ -1,11 +1,11 @@
-{% extends 'front/front_base.html' %}
+{% extends 'front_base.html' %}
 
 {% block title %}
     用户信息
 {% endblock %}
 
 {% block head %}
-    {{ static('css','front/css/front_profile_base.css') }}
+    <link rel="stylesheet" href="{% static 'css/front_profile_base.css' %}">
     {% block profile_head %}{% endblock %}
 {% endblock %}
 
@@ -24,8 +24,8 @@
         <div class="left-container">
             <div class="list-group">
                 <span class="list-group-item list-title">个人资料</span>
-                <a href="{% url 'front_profile' user_id=front_user.id %}" class="list-group-item {% block profile %}{% endblock %}">资料</a>
-                <a href="{% url 'front_profile_articles' user_id=front_user.id %}" class="list-group-item {% block articles %}{% endblock %}">文章</a>
+                <a href="{% url 'front_profile' user_id=front_user.uid %}" class="list-group-item {% block profile %}{% endblock %}">资料</a>
+                <a href="{% url 'front_profile_articles' user_id=front_user.uid %}" class="list-group-item {% block articles %}{% endblock %}">文章</a>
             </div>
         </div>
         <div class="right-container">

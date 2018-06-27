@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 import uuid
 from django.contrib.auth.models import User
+from frontauth.models import FrontUserModel
 
 # Create your models here.
 class ArticleModel(models.Model):
@@ -18,10 +19,13 @@ class ArticleModel(models.Model):
     # auto_now每次修改都会更新当前时间
     update_time = models.DateTimeField(auto_now=True,null=True)
     read_count = models.IntegerField(default=0)
+    # BooleanField只接受False/True，或0/1
     is_removed = models.BooleanField(null=False,default=False)
     
-    author = models.ForeignKey(User, null=False)
-    # board = models.ForeignKey('BoardModel', null=True)
+    author = models.ForeignKey(User, null=True)
+    # author = models.ForeignKey(User, null=False)
+    # c_author = models.ForeignKey(User, null=False)
+    # author = models.ForeignKey(FrontUserModel, null=False)
     category = models.ForeignKey('CategoryModel')
     # SET_NULL和CASCADE的区别在于，后者级联删除，而前者只是改为NULL
     # 设置ForeignKey 为 null; 这个只有设置了null 为 True的情况才能用

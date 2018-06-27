@@ -21,7 +21,7 @@ class ArticleModelHelper(object):
         COMMENT_COUNT = 4
 
     @classmethod
-    def common_page(cls, total_articles, page, key_name):
+    def common_page(cls, articles, total_articles, page, key_name):
         page_num = settings.PAGE_NUM
         start = (page - 1) * page_num
         end = start + page_num
@@ -63,28 +63,26 @@ class ArticleModelHelper(object):
     @classmethod
     def article_list(cls, sort, page, category_id):
         sort,category_id,page = int(sort),int(category_id),int(page)
-        articleModel = ArticleModel.objects
-        article_model = articleModel.all()
+        article_model = ArticleModel.objects.all()
 
         if sort == cls.ArticleSortType.TOP_RANK:
             articles = article_model.order_by(
                 '-top__create_time',
                 '-create_time')
         elif sort == cls.ArticleSortType.STAR_COUNT:
-            articles = articleModel.values('pk').annotate(
+            articles = ArticleModel.objects.values('pk').annotate(
                 star_counts=Count('articlestar__pk')).order_by(
                     '-star_counts','-create_time'
                 )
-        # 使用count这种方法需要从db导入func方法
         elif sort == cls.ArticleSortType.COMMENT_COUNT:
-            articles = articleModel.values('pk').annotate(
+            articles = ArticleModel.objects.values('pk').annotate(
                 comment_counts=Count('comment__pk')).order_by(
                     '-comment_counts','-create_time'
                 )
         else:
             articles = article_model
 
-        articles = articles.object.filter(is_removed=False)
+        articles = articles.filter(is_removed=False)
 
         # 如果分类选项不为0，就根据分类id选择，如果为0就是全部，不需要筛选
         if category_id:
@@ -93,6 +91,7 @@ class ArticleModelHelper(object):
         total_articles = articles.count()
 
         context = cls.common_page(
+            articles=articles,
             total_articles=total_articles,
             page=page,
             key_name='articles'

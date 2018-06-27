@@ -1,13 +1,12 @@
-
-
+{% load static %}
 <html lang="en">
 <head>
     <title>
     	{% block title %}{% endblock %}-Django Blog管理
     </title>
-    {% include "common/common_base.html" %}
-    <script src="{% static 'cms/js/cms_base.js' %}"></script>
-	<link rel="stylesheet" href="{% static 'cms/css/cms_base.css' %}">
+    {% include "common_base.html" %}
+    <script src="{% static 'js/cms_base.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/cms_base.css' %}">
 	{% block head %}{% endblock %}
 </head>
 
@@ -59,7 +58,7 @@
 	                    </ul>
 	                </li>
 
-	                <li class="nav-group articles-manage"><a href="{% url 'cms_article_list' %}">文章管理</a></li>
+	                <li class="nav-group articles-manage"><a href="{% url 'cms_article_list' sort=1 page=1 category_id=0 %}">文章管理</a></li>
 	                <li class="comments-manage"><a href="{% url 'cms_comment_list' %} }}">评论管理</a></li>
 	                <li class="categorys-manage"><a href="{% url 'cms_category_list' %} }}">分类管理</a></li>
 	                <li class="tags-manage"><a href="{% url 'cms_tag_list' %} }}">标签管理</a></li>

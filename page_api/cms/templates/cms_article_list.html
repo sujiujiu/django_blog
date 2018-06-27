@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block page_title %}
-	{{ self.title() }}
+	文章管理
 {% endblock %}
 
 {% block head %}
@@ -32,7 +32,7 @@
 		<div class="category-filter-group">
 			<label>根据分类：</label>
 			<select name="sort-select" id="category-select" class="form-control">
-				<option value="0" {% if c_category==0 %}selected{% endif %}>所有分类</option>
+				<option value="0" {% if c_category == 0 %}selected{% endif %}>所有分类</option>
 
 				{% for category in categorys %}
 					<option value="{{category.id}}" {% if category.id == c_category %}
@@ -71,10 +71,10 @@
 							<a href="{% url 'cms_edit_article' pk=article.article_id %}">编辑</a> |
 							<a href="#" class="top-article-btn">
 								{% if article.top %}
-									<button class="btn btn-info btn-xs hightlight-btn" data-post-id="{{ post.id }}" data-is-top="1">取消置顶</button>
+									<button class="btn btn-info btn-xs hightlight-btn" data-post-id="{{ article.article_id }}" data-is-top="1">取消置顶</button>
 									
 								{% else %}
-									<button class="btn btn-primary btn-xs hightlight-btn" data-post-id="{{ post.id }}" data-is-top="0">置顶</button>
+									<button class="btn btn-primary btn-xs hightlight-btn" data-post-id="{{ article.article_id }}" data-is-top="0">置顶</button>
 								{% endif %}
 							</a> |
 							<a href="#" class="remove-btn delete-article-btn" data-post-id="{{ article.article_id }}">删除</a>
@@ -84,7 +84,7 @@
 			</tbody>
 		</table>
 	</div>
-	{% if t_page >1 %}
+	{% if t_page > 1 %}
         <div class="page-nav">
             <nav aria-label="...">
                 <ul class="pagination">
@@ -93,10 +93,10 @@
                         <li class="disabled"><span>&lt;</span></li>
                     {% elif c_page <= 5 %}
                         <li class="disabled"><span>&laquo;</span></li>
-                        <li><a href="{% url 'cms_article_list' page=c_page-5 category_id=c_category sort=c_sort  %}"> &lt;</a></li>
+                        <li><a href="{% url 'cms_article_list' page=c_page|add:-5 category_id=c_category sort=c_sort  %}"> &lt;</a></li>
                     {% else %}
-                    	<li><a href="{% url 'cms_article_list' page=c_page-1 category_id=c_category sort=c_sort  %}">&laquo;</a></li>
-                    	<li><a href="{% url 'cms_article_list' page=c_page-5 category_id=c_category sort=c_sort,board=c_board  %}">&laquo;</a></li>
+                    	<li><a href="{% url 'cms_article_list' page=c_page|add:-1 category_id=c_category sort=c_sort  %}">&laquo;</a></li>
+                    	<li><a href="{% url 'cms_article_list' page=c_page|add:-5 category_id=c_category sort=c_sort  %}">&laquo;</a></li>
                     {% endif %}
 
                     {% for page in pages %}
@@ -107,20 +107,20 @@
                         {% endif %}
                     {% endfor %}
 
-                    <li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort %}">……</a></li>
-                    <li><a href="{% url 'cms_article_list' page=t_page+1 category_id=c_category sort=c_sort %}">{{ t_page }}</a></li>
+                    <li><a href="{% url 'cms_article_list' page=c_page|add:1 category_id=c_category sort=c_sort %}">……</a></li>
+                    <li><a href="{% url 'cms_article_list' page=t_page|add:1 category_id=c_category sort=c_sort %}">{{ t_page }}</a></li>
                     <li><span>共{{ t_page }}页</span></li>
 
                     {% if c_page >= t_page %}
                         <li class="disabled"><span>&gt;</span></li>
                         <li class="disabled"><span>&raquo;</span></li>
-                    {% elif c_page >= t_page-5 %}
-                    	<li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort %}">&gt;</a></li>
+                    {% elif c_page >= t_page|add:-5 %}
+                    	<li><a href="{% url 'cms_article_list' page=c_page|add:1 category_id=c_category sort=c_sort %}">&gt;</a></li>
                         <li class="disabled"><span>&raquo;</span></li>
                     {% else %}
-                    	<li><a href="{% url 'cms_article_list' page=c_page+1 category_id=c_category sort=c_sort %}">……</a>
+                    	<li><a href="{% url 'cms_article_list' page=c_page|add:1 category_id=c_category sort=c_sort %}">……</a>
                     	</li>
-                    	<li><a href="{% url 'cms_article_list' page=t_page+5 category_id=c_category sort=c_sort  %}">{{ t_page }}</a></li>
+                    	<li><a href="{% url 'cms_article_list' page=t_page|add:5 category_id=c_category sort=c_sort  %}">{{ t_page }}</a></li>
                     {% endif %}
                 </ul>
             </nav>

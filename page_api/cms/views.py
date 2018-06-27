@@ -178,6 +178,7 @@ def cms_settings(request):
 
 # 文章列表
 @login_required
+# def cms_article_list(request,sort=1,page=1,category_id=0):
 def cms_article_list(request):
     sort = request.GET.get('sort',1)
     page = request.GET.get('page',1)
@@ -257,7 +258,7 @@ def cms_edit_article(request):
                 'tags': TagModel.objects.all(),
                 'article': article_dict
             }
-            return render(request, 'cms_add_article.html', context=context)
+            return render(request, 'cms_edit_article.html', context=context)
         else:
             return myjson.json_params_error(u'没有该id！')
     else:
@@ -314,6 +315,7 @@ def cms_delete_article(request):
 
 # 文章置顶
 @login_required
+@require_http_methods(['POST'])
 def cms_top_article(request):
     '''置顶和取消置顶
         1. 如果文章已置顶则无需再置顶，未置顶则置顶。
@@ -503,12 +505,24 @@ def cms_remove_category(request):
 def test(request):
     # 1.创建一个后台账号
     # create_user = User.objects.create(email='xx@qq.com',password='111')
+    # create_user = User.objects.create(username='xx',password='111')
     # create_user.save()
-    # 2. 测试生成100篇文章
-    for i in xrange(0,100):
-        title = u'title' + str(i)
-        category = CategoryModel.objects.all().first()
-        content = u'blog_content_' + str(i)
-        article_model = ArticleModel(title=title,content=content,category=category)
-        article_model.save()
-    return myjson.json_result()
+    # 2.添加categorys
+    # category = CategoryModel.objects.create(name='python')
+    # category = CategoryModel.objects.create(name='django')
+    # category = CategoryModel.objects.create(name='flask')
+    # category.save()
+    # 3. 测试生成100篇文章
+    # for i in xrange(0,100):
+    #     title = 'title' + str(i)
+    #     category = CategoryModel.objects.all().first()
+    #     content = 'blog_content_' + str(i)
+    #     article_model = ArticleModel(
+    #         title=title,
+    #         content=content,
+    #         category=category
+    #         )
+    #     article_model.save()
+    # return myjson.json_result()
+    # 4.
+    pass
